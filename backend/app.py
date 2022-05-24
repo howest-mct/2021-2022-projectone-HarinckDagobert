@@ -5,7 +5,7 @@ import threading
 
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from repositories.DataRepository import DataRepository
 
 from selenium import webdriver
@@ -13,7 +13,10 @@ from selenium import webdriver
 # from selenium import webdriver
 # from selenium.webdriver.chrome.options import Options
 
+#Custum endpoint
+endpoint = '/api/v1'
 
+#hardware setup
 ledPin = 21
 btnPin = Button(16)
 
@@ -31,10 +34,10 @@ def setup_gpio():
 def lees_knop(pin):
     if btnPin.pressed:
         print("**** button pressed ****")
-        if GPIO.input(ledPin) == 1:
-            switch_light({'lamp_id': '3', 'new_status': 0})
-        else:
-            switch_light({'lamp_id': '3', 'new_status': 1})
+        # if GPIO.input(ledPin) == 1:
+        #     switch_light({'lamp_id': '3', 'new_status': 0})
+        # else:
+        #     switch_light({'lamp_id': '3', 'new_status': 1})
 
 
 
@@ -62,14 +65,33 @@ def error_handler(e):
 def hallo():
     return "Server is running, er zijn momenteel geen API endpoints beschikbaar."
 
+@app.route(endpoint + '/historiek/', methods=['GET'])
+def get_historiek():
+    if request.method == 'GET':
+        return jsonify(historiek=DataRepository.read_historiek()), 200
+
+@app.route(endpoint + '/historiek/<date>/', methods=['GET'])
+def get_historiek_by_date(date):
+    if request.method == 'GET':
+        return jsonify(historiek_date=DataRepository.read_historiek_by_date(date)), 200
+
+@app.route(endpoint + '/historiek/device/<device_id>/', methods=['GET'])
+def get_historiek_by_device(device_id):
+    if request.method == 'GET':
+        return jsonify(historiek_device=DataRepository.read_historiek_by_device(device_id)), 200
+
+@app.route(endpoint + '/historiek/device/<device_id>/<date>/', methods=['GET'])
+def get_historiek_by_date_device(device_id,date):
+    if request.method == 'GET':
+        return jsonify(historiek_device_by_date=DataRepository.read_historiek_by_date_en_device(device_id,date)), 200
 
 @socketio.on('connect')
 def initial_connection():
     print('A new client connect')
     # # Send to the client!
     # vraag de status op van de lampen uit de DB
-    status = DataRepository.read_status_lampen()
-    emit('B2F_status_lampen', {'lampen': status}, broadcast=True)
+    # status = DataRepository.read_status_lampen()
+    # emit('B2F_status_lampen', {'lampen': status}, broadcast=True)
 
 
 @socketio.on('F2B_switch_light')
@@ -80,16 +102,16 @@ def switch_light(data):
     print(f"Lamp {lamp_id} wordt geswitcht naar {new_status}")
 
     # Stel de status in op de DB
-    res = DataRepository.update_status_lamp(lamp_id, new_status)
+    # res = DataRepository.update_status_lamp(lamp_id, new_status)
 
     # Vraag de (nieuwe) status op van de lamp en stuur deze naar de frontend.
-    data = DataRepository.read_status_lamp_by_id(lamp_id)
-    socketio.emit('B2F_verandering_lamp', {'lamp': data}, broadcast=True)
+    # data = DataRepository.read_status_lamp_by_id(lamp_id)
+    # socketio.emit('B2F_verandering_lamp', {'lamp': data}, broadcast=True)
 
     # Indien het om de lamp van de TV kamer gaat, dan moeten we ook de hardware aansturen.
-    if lamp_id == '3':
-        print(f"TV kamer moet switchen naar {new_status} !")
-        GPIO.output(ledPin, new_status)
+    # if lamp_id == '3':
+        # print(f"TV kamer moet switchen naar {new_status} !")
+        # GPIO.output(ledPin, new_status)
 
 
 
@@ -97,11 +119,11 @@ def switch_light(data):
 # werk enkel met de packages gevent en gevent-websocket.
 def all_out():
     while True:
-        print('*** We zetten alles uit **')
-        DataRepository.update_status_alle_lampen(0)
+        # print('*** We zetten alles uit **')
+        # DataRepository.update_status_alle_lampen(0)
         GPIO.output(ledPin, 0)
-        status = DataRepository.read_status_lampen()
-        socketio.emit('B2F_status_lampen', {'lampen': status})
+        # status = DataRepository.read_status_lampen()
+        # socketio.emit('B2F_status_lampen', {'lampen': status})
         time.sleep(15)
 
 def start_thread():
@@ -160,4 +182,5 @@ if __name__ == '__main__':
         print ('KeyboardInterrupt exception is caught')
     finally:
         GPIO.cleanup()
+
 
