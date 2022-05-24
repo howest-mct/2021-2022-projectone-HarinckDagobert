@@ -11,24 +11,28 @@ class DataRepository:
         return gegevens
 
     @staticmethod
-    def read_status_lampen():
-        sql = "SELECT * from lampen"
+    def read_historiek():
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek"
         return Database.get_rows(sql)
 
     @staticmethod
-    def read_status_lamp_by_id(id):
-        sql = "SELECT * from lampen WHERE id = %s"
-        params = [id]
-        return Database.get_one_row(sql, params)
-
+    def read_historiek_by_date(date):
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE datum BETWEEN %s AND %s"
+        date1 = date + ' 00:00:00'
+        date2 = date + ' 23:59:59'
+        params = [date1,date2]
+        return Database.get_rows(sql,params)
+    
     @staticmethod
-    def update_status_lamp(id, status):
-        sql = "UPDATE lampen SET status = %s WHERE id = %s"
-        params = [status, id]
-        return Database.execute_sql(sql, params)
-
+    def read_historiek_by_device(deviceid):
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s"
+        params = [deviceid]
+        return Database.get_rows(sql,params)
+    
     @staticmethod
-    def update_status_alle_lampen(status):
-        sql = "UPDATE lampen SET status = %s"
-        params = [status]
-        return Database.execute_sql(sql, params)
+    def read_historiek_by_date_en_device(deviceid,date):
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s AND datum BETWEEN %s AND %s"
+        date1 = date + ' 00:00:00'
+        date2 = date + ' 23:59:59'
+        params = [deviceid, date1,date2]
+        return Database.get_rows(sql,params)
