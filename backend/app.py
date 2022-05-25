@@ -108,7 +108,7 @@ def initial_connection():
     # # Send to the client!
     # vraag de status op van de lampen uit de DB
     # status = DataRepository.read_status_lampen()
-    # emit('B2F_status_lampen', {'lampen': status}, broadcast=True)
+    # emit('B2F_status_lampen', {'lampen': status}, broadcast=True
 
 
 @socketio.on('F2B_switch_light')
@@ -148,6 +148,15 @@ def start_historiek_thread():
     thread = threading.Thread(target=meting_historiek, args=(), daemon=True)
     thread.start()
 
+def realtime_sensoren():
+    while True:
+        sens = lees_sensors()
+        socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':sens[0],'licht':sens[1],'wind':sens[2]}}, broadcast=True)
+        time.sleep(1)
+
+def start_realtime_sensoren():
+    thread = threading.Thread(target=realtime_sensoren, args=(), daemon=True)
+    thread.start()
 
 def start_chrome_kiosk():
     import os
@@ -191,8 +200,9 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        start_historiek_thread()
+        # start_historiek_thread()
         start_chrome_thread()
+        start_realtime_sensoren()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:
