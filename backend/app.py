@@ -3,7 +3,6 @@ from math import log
 from RPi import GPIO
 from helpers.klasseknop import Button
 from helpers.spiclass import SpiClass
-import spidev
 import threading
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
@@ -21,6 +20,7 @@ endpoint = '/api/v1'
 #hardware setup
 ledPin = 21
 btnPin = Button(17)
+schermStatus = 0
 spiClassObj = SpiClass(0, 0)
 
 # Code voor Hardware
@@ -104,19 +104,19 @@ def get_historiek_by_date_device(device_id,date):
 
 # @socketio.on('connect')
 # def initial_connection():
-    # print('A new client connect')
-    # # Send to the client!
-    # vraag de status op van de lampen uit de DB
-    # status = DataRepository.read_status_lampen()
-    # emit('B2F_status_lampen', {'lampen': status}, broadcast=True
+    # print("client connects")
 
+@socketio.on('F2B_switch_scherm')
+def switch_scherm():
+    schermStatus != schermStatus
+    print("scherm opent/sluit")
 
-@socketio.on('F2B_switch_light')
-def switch_light(data):
-    # Ophalen van de data
-    lamp_id = data['lamp_id']
-    new_status = data['new_status']
-    print(f"Lamp {lamp_id} wordt geswitcht naar {new_status}")
+# @socketio.on('F2B_switch_light')
+# def switch_light(data):
+#     Ophalen van de data
+#     lamp_id = data['lamp_id']
+#     new_status = data['new_status']
+#     print(f"Lamp {lamp_id} wordt geswitcht naar {new_status}")
 
     # Stel de status in op de DB
     # res = DataRepository.update_status_lamp(lamp_id, new_status)
@@ -152,7 +152,7 @@ def realtime_sensoren():
     while True:
         sens = lees_sensors()
         socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':sens[0],'licht':sens[1],'wind':sens[2]}}, broadcast=True)
-        time.sleep(1)
+        time.sleep(0.1)
 
 def start_realtime_sensoren():
     thread = threading.Thread(target=realtime_sensoren, args=(), daemon=True)

@@ -1,20 +1,25 @@
 'use strict';
 
 const lanIP = `${window.location.hostname}:5000`;
-const socket = io(`http://${lanIP}`);
+const socket = io(`${lanIP}`);
 //#region ***  DOM references                           ***********  
 //#endregion
 
-const listenToUI = function () {};
+const listenToUI = function () {
+  const btn = document.querySelector('.js-scherm-button');
+  btn.addEventListener("click", function () {
+    socket.emit("F2B_switch_scherm");
+  })
+};
 //#region ***  Callback-Visualisation - show___         ***********
 const showHistoriek = function(jsonObject) {
   console.log(jsonObject);
 };
 
 const showRealtime = function(jsonObject) {
-  const HTMLsensor = document.querySelector('.js-sensors');
+  const htmlsensor = document.querySelector('.js-sensors');
   const arrsensors = jsonObject.sensoren;
-  HTMLsensor.innerHTML = `<p>temperatuur ${arrsensors.temp} C   lichtsterkte: ${arrsensors.licht} lux   windsterkte: ${arrsensors.wind} m/s</p>`;
+  htmlsensor.innerHTML = `<p>temperatuur ${arrsensors.temp} C   lichtsterkte: ${arrsensors.licht} lux   windsterkte: ${arrsensors.wind} m/s</p>`;
 };
 //#endregion
 
@@ -23,7 +28,7 @@ const showRealtime = function(jsonObject) {
 
 //#region ***  Data Access - get___                     ***********
 const getHistoriek = function () {
-  handleData(`http://192.168.168.169:5000/api/v1/historiek/`, showHistoriek);
+  handleData(`http://${lanIP}/api/v1/historiek/`, showHistoriek);
 };
 //#endregion
 
@@ -43,7 +48,6 @@ const listenToSocket = function () {
 //#region ***  Init / DOMContentLoaded                  ***********
 const init = function () {
   console.info("DOM geladen");
-
   listenToUI();
   listenToSocket();
   getHistoriek();
