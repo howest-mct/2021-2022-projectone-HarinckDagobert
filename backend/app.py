@@ -1,8 +1,10 @@
 import time
+from math import log
 from RPi import GPIO
 from helpers.klasseknop import Button
+from helpers.spiclass import SpiClass
+import spidev
 import threading
-
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
 from flask import Flask, jsonify, request
@@ -18,19 +20,34 @@ endpoint = '/api/v1'
 
 #hardware setup
 ledPin = 21
-btnPin = Button(16)
+btnPin = Button(17)
+spiClassObj = SpiClass(0, 0)
 
 # Code voor Hardware
 def setup_gpio():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-
     GPIO.setup(ledPin, GPIO.OUT)
     GPIO.output(ledPin, GPIO.LOW)
-    
     btnPin.on_press(lees_knop)
 
+def omzettemp(value):
+    rntc = 10000/((1023/value)-1)
+    kelvin = 1/(1/298.15 + 1/4000 * log(rntc/10000))
+    return (kelvin - 273.15)
 
+def omzetlux(value):
+    ldrv = (value/1023) * 3.3
+    ldrlux = (500/ldrv)
+    return ldrlux
+
+
+def lees_sensors():
+    temp = round(omzettemp(spiClassObj.read_channel(1)),2)
+    licht = round(omzetlux(spiClassObj.read_channel(2)))
+    wind = 10.4
+    return [temp,licht,wind]
+    
 def lees_knop(pin):
     if btnPin.pressed:
         print("**** button pressed ****")
@@ -117,18 +134,18 @@ def switch_light(data):
 
 # START een thread op. Belangrijk!!! Debugging moet UIT staan op start van de server, anders start de thread dubbel op
 # werk enkel met de packages gevent en gevent-websocket.
-def all_out():
+def meting_historiek():
     while True:
-        # print('*** We zetten alles uit **')
-        # DataRepository.update_status_alle_lampen(0)
-        GPIO.output(ledPin, 0)
-        # status = DataRepository.read_status_lampen()
-        # socketio.emit('B2F_status_lampen', {'lampen': status})
-        time.sleep(15)
+        print('*** We zetten op historiek **')
+        sens = lees_sensors()
+        DataRepository.insert_into_historiek(sens[0],None,3,None)
+        DataRepository.insert_into_historiek(sens[1],None,2,None)
+        DataRepository.insert_into_historiek(sens[2],None,1,None)
+        time.sleep(120)
 
-def start_thread():
-    print("**** Starting THREAD ****")
-    thread = threading.Thread(target=all_out, args=(), daemon=True)
+def start_historiek_thread():
+    print("**** Starting historiek THREAD ****")
+    thread = threading.Thread(target=meting_historiek, args=(), daemon=True)
     thread.start()
 
 
@@ -174,7 +191,7 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        start_thread()
+        start_historiek_thread()
         start_chrome_thread()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')

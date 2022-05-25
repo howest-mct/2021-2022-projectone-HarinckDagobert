@@ -36,3 +36,9 @@ class DataRepository:
         date2 = date + ' 23:59:59'
         params = [deviceid, date1,date2]
         return Database.get_rows(sql,params)
+
+    @staticmethod
+    def insert_into_historiek(waarde,commentaar,deviceid,actieid):
+        sql = "INSERT INTO historiek(waarde,commentaar,deviceid,actieid) VALUES(%s,%s,%s,%s)"
+        params = [waarde,commentaar,deviceid,actieid]
+        return Database.execute_sql(sql,params)
