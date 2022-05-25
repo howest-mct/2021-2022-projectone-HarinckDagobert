@@ -102,9 +102,9 @@ def get_historiek_by_date_device(device_id,date):
     if request.method == 'GET':
         return jsonify(historiek_device_by_date=DataRepository.read_historiek_by_date_en_device(device_id,date)), 200
 
-@socketio.on('connect')
-def initial_connection():
-    print('A new client connect')
+# @socketio.on('connect')
+# def initial_connection():
+    # print('A new client connect')
     # # Send to the client!
     # vraag de status op van de lampen uit de DB
     # status = DataRepository.read_status_lampen()

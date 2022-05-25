@@ -1,50 +1,53 @@
+'use strict';
+
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`http://${lanIP}`);
+//#region ***  DOM references                           ***********  
+//#endregion
 
-const clearClassList = function (el) {
-  el.classList.remove("c-room--wait");
-  el.classList.remove("c-room--on");
+const listenToUI = function () {};
+//#region ***  Callback-Visualisation - show___         ***********
+const showHistoriek = function(jsonObject) {
+  console.log(jsonObject);
 };
 
-const listenToUI = function () {
-  const knoppen = document.querySelectorAll(".js-power-btn");
-  for (const knop of knoppen) {
-    knop.addEventListener("click", function () {
-      const id = this.dataset.idlamp;
-      let nieuweStatus;
-      if (this.dataset.statuslamp == 0) {
-        nieuweStatus = 1;
-      } else {
-        nieuweStatus = 0;
-      }
-      //const statusOmgekeerd = !status;
-      clearClassList(document.querySelector(`.js-room[data-idlamp="${id}"]`));
-      document.querySelector(`.js-room[data-idlamp="${id}"]`).classList.add("c-room--wait");
-      socket.emit("F2B_switch_light", { lamp_id: id, new_status: nieuweStatus });
-    });
-  }
+const showRealtime = function(jsonObject) {
+  const HTMLsensor = document.querySelector('.js-sensors');
+  const arrsensors = jsonObject.sensoren;
+  HTMLsensor.innerHTML = `<p>temperatuur ${arrsensors.temp} C   lichtsterkte: ${arrsensors.licht} lux   windsterkte: ${arrsensors.wind} m/s</p>`;
 };
+//#endregion
 
+//#region ***  Callback-No Visualisation - callback___  ***********
+//#endregion
+
+//#region ***  Data Access - get___                     ***********
+const getHistoriek = function () {
+  handleData(`http://192.168.168.169:5000/api/v1/historiek/`, showHistoriek);
+};
+//#endregion
+
+//#region ***  Event Listeners - listenTo___            ***********
 const listenToSocket = function () {
   socket.on("connected", function () {
     console.log("verbonden met socket webserver");
   });
 
   socket.on("B2F_status_sensoren", function (jsonObject) {
-    const HTMLsensor = document.querySelector('.js-sensors')
-    arrsensors = jsonObject.sensoren
-    HTMLsensor.innerHTML = `<p>temperatuur ${arrsensors.temp} C   lichtsterkte: ${arrsensors.licht} lux   windsterkte: ${arrsensors.wind} m/s</p>`
+    showRealtime(jsonObject)
   });
 
-
-  socket.on("B2F_verandering_lamp_from_HRDWR", function (jsonObject) {
-    console.log(jsonObject)
-  }) 
-
 };
+//#endregion
 
-document.addEventListener("DOMContentLoaded", function () {
+//#region ***  Init / DOMContentLoaded                  ***********
+const init = function () {
   console.info("DOM geladen");
+
   listenToUI();
   listenToSocket();
-});
+  getHistoriek();
+}
+
+document.addEventListener("DOMContentLoaded", init);
+//#endregion
