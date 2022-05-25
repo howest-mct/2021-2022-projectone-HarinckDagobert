@@ -51,10 +51,7 @@ def lees_sensors():
 def lees_knop(pin):
     if btnPin.pressed:
         print("**** button pressed ****")
-        # if GPIO.input(ledPin) == 1:
-        #     switch_light({'lamp_id': '3', 'new_status': 0})
-        # else:
-        #     switch_light({'lamp_id': '3', 'new_status': 1})
+        schermStatus != schermStatus
 
 
 
