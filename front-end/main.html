@@ -4,9 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Huis</title>
+    <title>Smart Zonnescherm</title>
     <link rel="stylesheet" href="style/screen.css" />
-    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous"></script>
+    <script
+      src="https://cdn.socket.io/4.0.1/socket.io.min.js"
+      integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU"
+      crossorigin="anonymous"
+    ></script>
     <script src="script/datahandler.js"></script>
     <script src="script/app.js"></script>
   </head>
@@ -17,14 +21,22 @@
         <p></p>
         <div class="c-room__icon">
           <div class="c-fancy-bulb">
-            <div class="c-fancy-bulb__streaks c-fancy-bulb__streaks--left"></div>
-            <div class="c-fancy-bulb__streaks c-fancy-bulb__streaks--right"></div>
+            <div
+              class="c-fancy-bulb__streaks c-fancy-bulb__streaks--left"
+            ></div>
+            <div
+              class="c-fancy-bulb__streaks c-fancy-bulb__streaks--right"
+            ></div>
           </div>
         </div>
         <div class="c-room__control">
-          <div class="c-power-btn js-scherm-button" data-idlamp="1" data-statuslamp="0">zonnescherm</div>
+          <div class="c-power-btn js-scherm-button">zonnescherm</div>
         </div>
+        <ol class="c-room js-historiek">
+        <li>Coffee</li>
+        <li>Tea</li>
+        <li>Milk</li>
+      </ol>
       </article>
-    </div>
   </body>
 </html>

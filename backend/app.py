@@ -32,9 +32,10 @@ def setup_gpio():
     btnPin.on_press(lees_knop)
 
 def omzettemp(value):
-    rntc = 10000/((1023/value)-1)
-    kelvin = 1/(1/298.15 + 1/4000 * log(rntc/10000))
-    return (kelvin - 273.15)
+    untc = (value/1023) * 3.3
+    temp = untc*(-33.333) + 105.33
+    # kelvin = 1/(1/298.15 + 1/4000 * log(rntc/10000))
+    return (temp)
 
 def omzetlux(value):
     ldrv = (value/1023) * 3.3
@@ -43,8 +44,10 @@ def omzetlux(value):
 
 
 def lees_sensors():
-    temp = round(omzettemp(spiClassObj.read_channel(1)),2)
-    licht = round(omzetlux(spiClassObj.read_channel(2)))
+    # temp = round(omzettemp(spiClassObj.read_channel(1)),2)
+    # licht = round(omzetlux(spiClassObj.read_channel(2)))
+    temp = 1
+    licht = 1
     wind = 10.4
     return [temp,licht,wind]
     
@@ -108,24 +111,6 @@ def switch_scherm():
     schermStatus != schermStatus
     print("scherm opent/sluit")
 
-# @socketio.on('F2B_switch_light')
-# def switch_light(data):
-#     Ophalen van de data
-#     lamp_id = data['lamp_id']
-#     new_status = data['new_status']
-#     print(f"Lamp {lamp_id} wordt geswitcht naar {new_status}")
-
-    # Stel de status in op de DB
-    # res = DataRepository.update_status_lamp(lamp_id, new_status)
-
-    # Vraag de (nieuwe) status op van de lamp en stuur deze naar de frontend.
-    # data = DataRepository.read_status_lamp_by_id(lamp_id)
-    # socketio.emit('B2F_verandering_lamp', {'lamp': data}, broadcast=True)
-
-    # Indien het om de lamp van de TV kamer gaat, dan moeten we ook de hardware aansturen.
-    # if lamp_id == '3':
-        # print(f"TV kamer moet switchen naar {new_status} !")
-        # GPIO.output(ledPin, new_status)
 
 
 
