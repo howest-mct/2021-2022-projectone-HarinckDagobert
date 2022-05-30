@@ -64,6 +64,11 @@ const listenToSocket = function () {
   socket.on("B2F_status_sensoren", function (jsonObject) {
     showRealtime(jsonObject);
   });
+
+  socket.on("B2F_new_historiek", function () {
+    console.log("new historiek");
+    getHistoriek();
+  });
 };
 //#endregion
 

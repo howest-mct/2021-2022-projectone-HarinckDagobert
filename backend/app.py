@@ -3,6 +3,7 @@ from math import log
 from RPi import GPIO
 from helpers.klasseknop import Button
 from helpers.spiclass import SpiClass
+from helpers.stepklas import stepClass
 import threading
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
@@ -22,6 +23,7 @@ ledPin = 21
 btnPin = Button(17)
 schermStatus = False
 spiClassObj = SpiClass(0, 0)
+steppobj = stepClass([6,13,19,26])
 
 # Code voor Hardware
 def setup_gpio():
@@ -58,9 +60,10 @@ def lees_knop(pin):
 def verander_scherm(new_status):
     if new_status == True:
         print("zonnescherm opent")
+        steppobj.rechts()
     elif new_status == False:
         print("zonnescherm sluit")
-
+        steppobj.links()
 
 # Code voor Flask
 
@@ -127,6 +130,7 @@ def meting_historiek():
         DataRepository.insert_into_historiek(sens[0],None,3,None)
         DataRepository.insert_into_historiek(sens[1],None,2,None)
         DataRepository.insert_into_historiek(sens[2],None,1,None)
+        socketio.emit('B2F_new_historiek',broadcast=True)
         time.sleep(120)
 
 def start_historiek_thread():
@@ -186,7 +190,7 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        start_historiek_thread()
+        # start_historiek_thread()
         start_chrome_thread()
         start_realtime_sensoren()
         print("**** Starting APP ****")
