@@ -20,7 +20,7 @@ endpoint = '/api/v1'
 #hardware setup
 ledPin = 21
 btnPin = Button(17)
-schermStatus = 0
+schermStatus = False
 spiClassObj = SpiClass(0, 0)
 
 # Code voor Hardware
@@ -50,10 +50,16 @@ def lees_sensors():
     
 def lees_knop(pin):
     if btnPin.pressed:
+        global schermStatus
         print("**** button pressed ****")
-        schermStatus != schermStatus
+        schermStatus = not schermStatus
+        verander_scherm(schermStatus)
 
-
+def verander_scherm(new_status):
+    if new_status == True:
+        print("zonnescherm opent")
+    elif new_status == False:
+        print("zonnescherm sluit")
 
 
 # Code voor Flask
@@ -104,9 +110,10 @@ def get_historiek_by_date_device(device_id,date):
     # print("client connects")
 
 @socketio.on('F2B_switch_scherm')
-def switch_scherm():
-    schermStatus != schermStatus
-    print("scherm opent/sluit")
+def receive_switch_scherm():
+    global schermStatus
+    schermStatus = not schermStatus
+    verander_scherm(schermStatus)
 
 
 
