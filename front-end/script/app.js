@@ -14,8 +14,11 @@ const listenToUI = function () {
 };
 //#region ***  Callback-Visualisation - show___         ***********
 const showHistoriek = function (jsonObject) {
-  let html;
-  for (const meting of jsonObject.getHistoriek) {
+  let html = "";
+  let type;
+  let waarde;
+  for (const meting of jsonObject.historiek) {
+    console.log(meting);
     if ((meting.deviceid = 1)) {
       type = "windsterkte";
       waarde = meting.waarde + " m/s";
