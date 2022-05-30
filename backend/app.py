@@ -33,8 +33,7 @@ def setup_gpio():
 
 def omzettemp(value):
     untc = (value/1023) * 3.3
-    temp = untc*(-33.333) + 105.33
-    # kelvin = 1/(1/298.15 + 1/4000 * log(rntc/10000))
+    temp = untc*(-33.333) + 113.33
     return (temp)
 
 def omzetlux(value):
@@ -44,10 +43,8 @@ def omzetlux(value):
 
 
 def lees_sensors():
-    # temp = round(omzettemp(spiClassObj.read_channel(1)),2)
-    # licht = round(omzetlux(spiClassObj.read_channel(2)))
-    temp = 1
-    licht = 1
+    temp = round(omzettemp(spiClassObj.read_channel(1)),2)
+    licht = round(omzetlux(spiClassObj.read_channel(2)))
     wind = 10.4
     return [temp,licht,wind]
     
@@ -182,7 +179,7 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        # start_historiek_thread()
+        start_historiek_thread()
         start_chrome_thread()
         start_realtime_sensoren()
         print("**** Starting APP ****")
