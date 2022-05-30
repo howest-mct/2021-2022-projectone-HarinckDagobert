@@ -19,20 +19,21 @@ const showHistoriek = function (jsonObject) {
   let waarde;
   for (const meting of jsonObject.historiek) {
     console.log(meting);
-    if ((meting.deviceid = 1)) {
+    if (meting.deviceid == 1) {
       type = "windsterkte";
       waarde = meting.waarde + " m/s";
-    } else if ((meting.deviceid = 2)) {
+    } else if (meting.deviceid == 2) {
+      console.log("test");
       type = "lichtsterkte";
       waarde = meting.waarde + " lux";
-    } else if ((meting.deviceid = 3)) {
+    } else if (meting.deviceid == 3) {
       type = "temperatuur";
       waarde = meting.waarde + " C°";
-    } else if ((meting.deviceid = 4)) {
+    } else if (meting.deviceid == 4) {
       type = "zonnescherm";
-      if ((meting.waarde = 1)) {
+      if (meting.waarde == 1) {
         waarde = "gaat open";
-      } else if ((meting.waarde = 0)) {
+      } else if (meting.waarde == 0) {
         waarde = "gaat dicht";
       }
     }
