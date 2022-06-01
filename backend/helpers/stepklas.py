@@ -1,5 +1,7 @@
 from RPi import GPIO
 import time
+import threading
+import multiprocessing
 
 stap = [
 [False,False,False,True],
@@ -22,6 +24,11 @@ class stepClass:
             GPIO.output(self.pins[i],stap[n][i])
 
     def rechts(self):
+        thread = multiprocessing.Process(target=self.scherm_rechts, args=(), daemon=True)
+        thread.start()
+        thread.join()
+    
+    def scherm_rechts(self):
         thestep = 0
         for i in range(0,1024):
             self.dostep(thestep)
@@ -32,6 +39,12 @@ class stepClass:
 
 
     def links(self):
+        thread = multiprocessing.Process(target=self.scherm_links, args=(), daemon=True)
+        thread.start()
+        thread.join()
+        
+
+    def scherm_links(self):
         thestep = 0
         for i in range(0,1024):
             self.dostep(thestep)

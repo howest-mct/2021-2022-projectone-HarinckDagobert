@@ -3,6 +3,7 @@ from math import log
 from RPi import GPIO
 from helpers.klasseknop import Button
 from helpers.spiclass import SpiClass
+from helpers.lcdklassei2c import lcd
 from helpers.stepklas import stepClass
 import threading
 from flask_cors import CORS
@@ -19,19 +20,23 @@ from selenium import webdriver
 endpoint = '/api/v1'
 
 #hardware setup
-ledPin = 21
 btnPin = Button(17)
 schermStatus = False
 spiClassObj = SpiClass(0, 0)
 steppobj = stepClass([6,13,19,26])
+E = 24
+RS = 23
+lcdobj = lcd(E, RS, False)
 
 # Code voor Hardware
 def setup_gpio():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(ledPin, GPIO.OUT)
-    GPIO.output(ledPin, GPIO.LOW)
     btnPin.on_press(lees_knop)
+    GPIO.setup(E, GPIO.OUT)
+    GPIO.setup(RS, GPIO.OUT)
+    lcdobj.initGPIO()
+
 
 def omzettemp(value):
     untc = (value/1023) * 3.3
@@ -43,18 +48,23 @@ def omzetlux(value):
     ldrlux = (500/ldrv)
     return ldrlux
 
+def omzetwind(value):
+    w = ((value-124)/496) * 32.4
+    return w
 
 def lees_sensors():
     temp = round(omzettemp(spiClassObj.read_channel(1)),2)
     licht = round(omzetlux(spiClassObj.read_channel(2)))
-    wind = 10.4
+    wind = round(omzetwind(spiClassObj.read_channel(0)),2)
     return [temp,licht,wind]
     
 def lees_knop(pin):
+    global steppobj
     if btnPin.pressed:
         global schermStatus
         print("**** button pressed ****")
         schermStatus = not schermStatus
+        print(schermStatus)
         verander_scherm(schermStatus)
 
 def verander_scherm(new_status):
@@ -64,6 +74,7 @@ def verander_scherm(new_status):
     elif new_status == False:
         print("zonnescherm sluit")
         steppobj.links()
+    
 
 # Code voor Flask
 
@@ -112,11 +123,11 @@ def get_historiek_by_date_device(device_id,date):
 # def initial_connection():
     # print("client connects")
 
-@socketio.on('F2B_switch_scherm')
-def receive_switch_scherm():
-    global schermStatus
-    schermStatus = not schermStatus
-    verander_scherm(schermStatus)
+# @socketio.on('F2B_switch_scherm')
+# def receive_switch_scherm():
+#     global schermStatus
+#     schermStatus = not schermStatus
+#     verander_scherm(schermStatus)
 
 
 
@@ -148,6 +159,15 @@ def start_realtime_sensoren():
     thread = threading.Thread(target=realtime_sensoren, args=(), daemon=True)
     thread.start()
 
+def lcd_display():
+    while True:
+        print("send")
+        lcdobj.send_message("test")
+
+def start_lcd_display():
+    thread = threading.Thread(target=lcd_display, args=(), daemon=True)
+    thread.start()
+    
 def start_chrome_kiosk():
     import os
 
@@ -193,6 +213,7 @@ if __name__ == '__main__':
         # start_historiek_thread()
         start_chrome_thread()
         start_realtime_sensoren()
+        start_lcd_display()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:
