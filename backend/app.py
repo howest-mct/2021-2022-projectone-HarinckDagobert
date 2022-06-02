@@ -10,6 +10,7 @@ from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
 from flask import Flask, jsonify, request
 from repositories.DataRepository import DataRepository
+from subprocess import check_output
 
 from selenium import webdriver
 
@@ -24,8 +25,8 @@ btnPin = Button(17)
 schermStatus = False
 spiClassObj = SpiClass(0, 0)
 steppobj = stepClass([6,13,19,26])
-E = 24
-RS = 23
+E = 23
+RS = 24
 lcdobj = lcd(E, RS, False)
 
 # Code voor Hardware
@@ -33,9 +34,10 @@ def setup_gpio():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
     btnPin.on_press(lees_knop)
-    GPIO.setup(E, GPIO.OUT)
-    GPIO.setup(RS, GPIO.OUT)
+    # GPIO.setup(E, GPIO.OUT)
+    # GPIO.setup(RS, GPIO.OUT)
     lcdobj.initGPIO()
+    lcdobj.init_LCD()
 
 
 def omzettemp(value):
@@ -161,9 +163,11 @@ def start_realtime_sensoren():
 
 def lcd_display():
     while True:
-        print("send")
-        lcdobj.send_message("test")
-
+        msg = check_output(
+            ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
+        lcdobj.LCD_move_cursor(0x40)
+        lcdobj.send_message(msg)
+        
 def start_lcd_display():
     thread = threading.Thread(target=lcd_display, args=(), daemon=True)
     thread.start()
