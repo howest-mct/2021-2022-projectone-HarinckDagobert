@@ -3,11 +3,14 @@ from math import log
 from RPi import GPIO
 from helpers.klasseknop import Button
 from helpers.spiclass import SpiClass
+from helpers.lcdklassei2c import lcd
+from helpers.stepklas import stepClass
 import threading
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, send
 from flask import Flask, jsonify, request
 from repositories.DataRepository import DataRepository
+from subprocess import check_output
 
 from selenium import webdriver
 
@@ -18,18 +21,24 @@ from selenium import webdriver
 endpoint = '/api/v1'
 
 #hardware setup
-ledPin = 21
 btnPin = Button(17)
-schermStatus = 0
+schermStatus = False
 spiClassObj = SpiClass(0, 0)
+steppobj = stepClass([6,13,19,26])
+E = 23
+RS = 24
+lcdobj = lcd(E, RS, False)
 
 # Code voor Hardware
 def setup_gpio():
     GPIO.setwarnings(False)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(ledPin, GPIO.OUT)
-    GPIO.output(ledPin, GPIO.LOW)
     btnPin.on_press(lees_knop)
+    # GPIO.setup(E, GPIO.OUT)
+    # GPIO.setup(RS, GPIO.OUT)
+    lcdobj.initGPIO()
+    lcdobj.init_LCD()
+
 
 def omzettemp(value):
     untc = (value/1023) * 3.3
@@ -41,20 +50,33 @@ def omzetlux(value):
     ldrlux = (500/ldrv)
     return ldrlux
 
+def omzetwind(value):
+    w = ((value-124)/496) * 32.4
+    return w
 
 def lees_sensors():
     temp = round(omzettemp(spiClassObj.read_channel(1)),2)
     licht = round(omzetlux(spiClassObj.read_channel(2)))
-    wind = 10.4
+    wind = round(omzetwind(spiClassObj.read_channel(0)),2)
     return [temp,licht,wind]
     
 def lees_knop(pin):
+    global steppobj
     if btnPin.pressed:
+        global schermStatus
         print("**** button pressed ****")
-        schermStatus != schermStatus
+        schermStatus = not schermStatus
+        print(schermStatus)
+        verander_scherm(schermStatus)
 
-
-
+def verander_scherm(new_status):
+    if new_status == True:
+        print("zonnescherm opent")
+        steppobj.rechts()
+    elif new_status == False:
+        print("zonnescherm sluit")
+        steppobj.links()
+    
 
 # Code voor Flask
 
@@ -103,10 +125,11 @@ def get_historiek_by_date_device(device_id,date):
 # def initial_connection():
     # print("client connects")
 
-@socketio.on('F2B_switch_scherm')
-def switch_scherm():
-    schermStatus != schermStatus
-    print("scherm opent/sluit")
+# @socketio.on('F2B_switch_scherm')
+# def receive_switch_scherm():
+#     global schermStatus
+#     schermStatus = not schermStatus
+#     verander_scherm(schermStatus)
 
 
 
@@ -120,6 +143,7 @@ def meting_historiek():
         DataRepository.insert_into_historiek(sens[0],None,3,None)
         DataRepository.insert_into_historiek(sens[1],None,2,None)
         DataRepository.insert_into_historiek(sens[2],None,1,None)
+        socketio.emit('B2F_new_historiek',broadcast=True)
         time.sleep(120)
 
 def start_historiek_thread():
@@ -137,6 +161,17 @@ def start_realtime_sensoren():
     thread = threading.Thread(target=realtime_sensoren, args=(), daemon=True)
     thread.start()
 
+def lcd_display():
+    while True:
+        msg = check_output(
+            ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
+        lcdobj.LCD_move_cursor(0x40)
+        lcdobj.send_message(msg)
+        
+def start_lcd_display():
+    thread = threading.Thread(target=lcd_display, args=(), daemon=True)
+    thread.start()
+    
 def start_chrome_kiosk():
     import os
 
@@ -179,9 +214,10 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        start_historiek_thread()
+        # start_historiek_thread()
         start_chrome_thread()
         start_realtime_sensoren()
+        start_lcd_display()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:

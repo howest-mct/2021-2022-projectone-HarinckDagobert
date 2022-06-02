@@ -18,12 +18,10 @@ const showHistoriek = function (jsonObject) {
   let type;
   let waarde;
   for (const meting of jsonObject.historiek) {
-    console.log(meting);
     if (meting.deviceid == 1) {
       type = "windsterkte";
       waarde = meting.waarde + " m/s";
     } else if (meting.deviceid == 2) {
-      console.log("test");
       type = "lichtsterkte";
       waarde = meting.waarde + " lux";
     } else if (meting.deviceid == 3) {
@@ -66,12 +64,17 @@ const listenToSocket = function () {
   socket.on("B2F_status_sensoren", function (jsonObject) {
     showRealtime(jsonObject);
   });
+
+  socket.on("B2F_new_historiek", function () {
+    console.log("new historiek");
+    getHistoriek();
+  });
 };
 //#endregion
 
 //#region ***  Init / DOMContentLoaded                  ***********
 const init = function () {
-  console.info("DOM geladen + test");
+  console.info("DOM geladen");
   htmlsensor = document.querySelector(".js-sensors");
   htmlhistoriek = document.querySelector(".js-historiek");
   listenToUI();
