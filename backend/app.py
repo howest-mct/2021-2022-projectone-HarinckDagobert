@@ -161,7 +161,7 @@ def maxmin_device():
             gegevens = DataRepository.json_or_formdata(request)
             print(gegevens)
             data = DataRepository.update_device(
-                gegevens["waardewind"], gegevens["waardelicht"], gegevens["waardetemp"])
+                gegevens["waardewind"], gegevens["waardelicht"], gegevens["waardetemp"],gegevens["dagen"])
             if data is not None:
                 return jsonify(rijen=data), 200
             else:
@@ -218,14 +218,16 @@ def check_params():
         global schermOverride
         if schermOverride == False:
             par = DataRepository.read_maxmin_device()
-            parwind = par[0]["maxminWaarde"]
-            parlicht = par[1]["maxminWaarde"]
-            partemp = par[2]["maxminWaarde"]
+            parwind = int(par[0]["waarde"])
+            parlicht = int(par[1]["waarde"])
+            partemp = int(par[2]["waarde"])
+            pardagen = list(par[3]["waarde"])
             sens = lees_sensors()
             senswind = sens[2]
             senslicht = sens[1]
             senstemp = sens[0]
-            if senswind < parwind and senslicht > parlicht and senstemp > partemp:
+            dag = check_output(['date', '+"%w"']).decode('utf-8')
+            if senswind < parwind and senslicht > parlicht and senstemp > partemp and dag in pardagen:
                 schermStatus = 1
             else:
                 schermStatus = 0
