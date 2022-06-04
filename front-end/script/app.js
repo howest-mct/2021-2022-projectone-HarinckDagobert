@@ -9,6 +9,7 @@ let htmlsensor, htmlhistoriek;
 const listenToUI = function () {
   const btn = document.querySelector(".js-scherm-button");
   btn.addEventListener("click", function () {
+    console.log("click");
     socket.emit("F2B_switch_scherm");
   });
 };
