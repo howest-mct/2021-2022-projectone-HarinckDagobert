@@ -36,7 +36,7 @@ const showHistoriek = function (jsonObject) {
         waarde = "gaat dicht";
       }
     }
-    html += `<li> datum:${meting.datum} ${type}:${waarde} </li>`;
+    html += `<li>${meting.datum}    ${type}:${waarde} </li>`;
     htmlhistoriek.innerHTML = html;
   }
 };

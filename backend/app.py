@@ -52,7 +52,7 @@ def omzettemp(value):
 def omzetlux(value):
     try:
         ldrv = (value/1023) * 3.3
-        ldrlux = (5000/ldrv)
+        ldrlux = (500/ldrv)
         return ldrlux
     except:
         return "error"
@@ -216,17 +216,17 @@ def check_params():
     while True:
         global schermStatus
         global schermOverride
+        global par
         if schermOverride == False:
-            par = DataRepository.read_maxmin_device()
             parwind = int(par[0]["waarde"])
             parlicht = int(par[1]["waarde"])
             partemp = int(par[2]["waarde"])
-            pardagen = list(par[3]["waarde"])
+            pardagen = par[3]["waarde"]
             sens = lees_sensors()
             senswind = sens[2]
             senslicht = sens[1]
             senstemp = sens[0]
-            dag = check_output(['date', '+"%w"']).decode('utf-8')
+            dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
             if senswind < parwind and senslicht > parlicht and senstemp > partemp and dag in pardagen:
                 schermStatus = 1
             else:
@@ -304,11 +304,12 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        # start_historiek_thread()
+        start_historiek_thread()
         start_chrome_thread()
         start_realtime_sensoren()
         start_lcd_display()
         start_check_status_scherm()
+        par = DataRepository.read_maxmin_device()
         start_check_params()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
