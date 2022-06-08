@@ -23,6 +23,7 @@ endpoint = '/api/v1'
 #hardware setup
 btnPin = Button(17)
 schermStatus = False
+schermOverride = False
 spiClassObj = SpiClass(0, 0)
 steppobj = stepClass([6,13,19,26])
 E = 23
@@ -41,18 +42,27 @@ def setup_gpio():
 
 
 def omzettemp(value):
-    untc = (value/1023) * 3.3
-    temp = untc*(-33.333) + 113.33
-    return (temp)
+    try:
+        untc = (value/1023) * 3.3
+        temp = untc*(-33.333) + 113.33
+        return (temp)
+    except:
+        return "error"
 
 def omzetlux(value):
-    ldrv = (value/1023) * 3.3
-    ldrlux = (500/ldrv)
-    return ldrlux
+    try:
+        ldrv = (value/1023) * 3.3
+        ldrlux = (500/ldrv)
+        return ldrlux
+    except:
+        return "error"
 
 def omzetwind(value):
-    w = ((value-124)/496) * 32.4
-    return w
+    try:
+        w = ((value-124)/496) * 32.4
+        return w
+    except:
+        return "error"
 
 def lees_sensors():
     temp = round(omzettemp(spiClassObj.read_channel(1)),2)
@@ -64,10 +74,12 @@ def lees_knop(pin):
     global steppobj
     if btnPin.pressed:
         global schermStatus
+        global schermOverride
         print("**** button pressed ****")
+        schermOverride = True
+        time.sleep(0.1)
         schermStatus = not schermStatus
         print(schermStatus)
-        verander_scherm(schermStatus)
 
 def verander_scherm(new_status):
     if new_status == True:
@@ -104,32 +116,72 @@ def hallo():
 @app.route(endpoint + '/historiek/', methods=['GET'])
 def get_historiek():
     if request.method == 'GET':
-        return jsonify(historiek=DataRepository.read_historiek()), 200
+        data = DataRepository.read_historiek()
+        if data is not None:
+            return jsonify(historiek=data), 200
+        else:
+            return jsonify(message="error"), 404
 
 @app.route(endpoint + '/historiek/<date>/', methods=['GET'])
 def get_historiek_by_date(date):
     if request.method == 'GET':
-        return jsonify(historiek_date=DataRepository.read_historiek_by_date(date)), 200
+        data=DataRepository.read_historiek_by_date(date)
+        if data is not None:
+            return jsonify(historiek_date=data), 200
+        else:
+            return jsonify(message="error"), 404
 
 @app.route(endpoint + '/historiek/device/<device_id>/', methods=['GET'])
 def get_historiek_by_device(device_id):
     if request.method == 'GET':
-        return jsonify(historiek_device=DataRepository.read_historiek_by_device(device_id)), 200
+        data=DataRepository.read_historiek_by_device(device_id)
+        if data is not None:
+            return jsonify(historiek_device=data), 200
+        else:
+            return jsonify(message="error"), 404
+        
 
 @app.route(endpoint + '/historiek/device/<device_id>/<date>/', methods=['GET'])
 def get_historiek_by_date_device(device_id,date):
     if request.method == 'GET':
-        return jsonify(historiek_device_by_date=DataRepository.read_historiek_by_date_en_device(device_id,date)), 200
+        data=DataRepository.read_historiek_by_date_en_device(device_id,date)
+        if data is not None:
+            return jsonify(historiek_device_by_date=data), 200
+        else:
+            return jsonify(message="error"), 404
 
-# @socketio.on('connect')
-# def initial_connection():
-    # print("client connects")
+@app.route(endpoint + '/device/', methods=['GET','PUT'])
+def maxmin_device():
+    if request.method == 'GET':
+        data=DataRepository.read_maxmin_device()
+        if data is not None:
+            return jsonify(maxminWaarde=data), 200
+        else:
+            return jsonify(message="error"), 404
+    elif request.method == 'PUT':
+            gegevens = DataRepository.json_or_formdata(request)
+            print(gegevens)
+            data = DataRepository.update_device(
+                gegevens["waardewind"], gegevens["waardelicht"], gegevens["waardetemp"],gegevens["dagen"])
+            if data is not None:
+                socketio.emit('B2F_new_parameters',broadcast=True)
+                return jsonify(rijen=data), 200
+            else:
+                return jsonify(message="error"), 404
 
-# @socketio.on('F2B_switch_scherm')
-# def receive_switch_scherm():
-#     global schermStatus
-#     schermStatus = not schermStatus
-#     verander_scherm(schermStatus)
+
+@socketio.on('connect')
+def initial_connection():
+    print("client connects")
+
+@socketio.on('F2B_switch_scherm')
+def receive_switch_scherm():
+    global schermStatus
+    global schermOverride
+    schermOverride = True
+    time.sleep(0.1)
+    schermStatus = not schermStatus
+    print(schermStatus)
 
 
 
@@ -153,12 +205,55 @@ def start_historiek_thread():
 
 def realtime_sensoren():
     while True:
+        global schermStatus
         sens = lees_sensors()
-        socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':sens[0],'licht':sens[1],'wind':sens[2]}}, broadcast=True)
-        time.sleep(0.1)
+        senswind = sens[2]
+        senslicht = sens[1]
+        senstemp = sens[0]        
+        socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':senstemp,'licht':senslicht,'wind':senswind, 'scherm':schermStatus}}, broadcast=True)
+        time.sleep(2.1)
 
 def start_realtime_sensoren():
     thread = threading.Thread(target=realtime_sensoren, args=(), daemon=True)
+    thread.start()
+
+def check_params():
+    while True:
+        global schermStatus
+        global schermOverride
+        global par
+        if schermOverride == False:
+            parwind = int(par[0]["waarde"])
+            parlicht = int(par[1]["waarde"])
+            partemp = int(par[2]["waarde"])
+            pardagen = par[3]["waarde"]
+            sens = lees_sensors()
+            senswind = sens[2]
+            senslicht = sens[1]
+            senstemp = sens[0]
+            dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
+            if senswind < parwind and senslicht > parlicht and senstemp > partemp and dag in pardagen:
+                schermStatus = True
+            else:
+                schermStatus = False
+        else:
+            schermOverride = False
+            time.sleep(120)
+
+def start_check_params():
+    thread = threading.Thread(target=check_params, args=(), daemon=True)
+    thread.start()
+
+def check_status_scherm():
+    vorigeStatus = False
+    while True:
+        global schermStatus
+        if vorigeStatus != schermStatus:
+            verander_scherm(schermStatus)
+            vorigeStatus = schermStatus
+
+def start_check_status_scherm():
+    thread = threading.Thread(target=check_status_scherm, args=(), daemon=True)
     thread.start()
 
 def lcd_display():
@@ -218,6 +313,9 @@ if __name__ == '__main__':
         start_chrome_thread()
         start_realtime_sensoren()
         start_lcd_display()
+        start_check_status_scherm()
+        par = DataRepository.read_maxmin_device()
+        start_check_params()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:

@@ -42,3 +42,14 @@ class DataRepository:
         sql = "INSERT INTO historiek(waarde,commentaar,deviceid,actieid) VALUES(%s,%s,%s,%s)"
         params = [waarde,commentaar,deviceid,actieid]
         return Database.execute_sql(sql,params)
+
+    @staticmethod
+    def read_maxmin_device():
+        sql = "SELECT parid,waarde FROM parameters"
+        return Database.get_rows(sql)
+    
+    @staticmethod
+    def update_device(waardewind, waardelicht, waardetemp,dagen):
+        sql = "UPDATE parameters SET waarde = CASE parid WHEN 1 THEN %s WHEN 2 THEN %s WHEN 3 THEN %s WHEN 4 THEN %s END WHERE parid IN (1,2,3,4);"
+        params = [waardewind, waardelicht, waardetemp,dagen]
+        return Database.execute_sql(sql,params)
