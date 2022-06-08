@@ -15,30 +15,32 @@
     <script src="script/app.js"></script>
   </head>
   <body>
-    <form>
-      <label for="mintemp">Minimum temperatuur:</label><br />
-      <input type="number" id="mintemp" name="mintemp" value="10" required /><br />
-      <label for="minlicht">Minimum lichtsterkte:</label><br />
-      <input type="number" id="minlicht" name="minlicht" value="1000" required /><br />
-      <label for="maxwind">Maximum windsterkte:</label><br />
-      <input type="number" id="maxwind" name="maxwind" value="25" required /><br />
-      <div>
-        <input type="checkbox" id="maandag" name="weekdagen" value="1" />
-        <label for="maandag">maandag</label><br />
-        <input type="checkbox" id="dinsdag" name="weekdagen" value="2" />
-        <label for="dinsdag">dinsdag</label><br />
-        <input type="checkbox" id="woensdag" name="weekdagen" value="3" />
-        <label for="woensdag">woensdag</label><br />
-        <input type="checkbox" id="donderdag" name="weekdagen" value="4" />
-        <label for="donderdag">donderdag</label><br />
-        <input type="checkbox" id="vrijdag" name="weekdagen" value="5" />
-        <label for="vrijdag">vrijdag</label><br />
-        <input type="checkbox" id="zaterdag" name="weekdagen" value="6" />
-        <label for="zaterdag">zaterdag</label><br />
-        <input type="checkbox" id="zondag" name="weekdagen" value="0" />
-        <label for="zondag">zondag</label><br />
-      </div>
-      <br /><input type="submit" value="Submit" />
-    </form>
+    <div class="js-form">
+      <form>
+        <label for="waardetemp">Minimum temperatuur:</label><br />
+        <input class="js-form-temp" type="number" id="waardetemp" name="waardetemp" value="10" required /><br />
+        <label for="waardelicht">Minimum lichtsterkte:</label><br />
+        <input class="js-form-licht" type="number" id="waardelicht" name="waardelicht" value="1000" required /><br />
+        <label for="waardewind">Maximum windsterkte:</label><br />
+        <input class="js-form-wind" type="number" id="waardewind" name="waardewind" value="25" required /><br />
+        <div>
+          <input class="js-form-dag" type="checkbox" id="maandag" name="weekdagen" value="1" />
+          <label for="maandag">maandag</label><br />
+          <input class="js-form-dag" type="checkbox" id="dinsdag" name="weekdagen" value="2" />
+          <label for="dinsdag">dinsdag</label><br />
+          <input class="js-form-dag" type="checkbox" id="woensdag" name="weekdagen" value="3" />
+          <label for="woensdag">woensdag</label><br />
+          <input class="js-form-dag" type="checkbox" id="donderdag" name="weekdagen" value="4" />
+          <label for="donderdag">donderdag</label><br />
+          <input class="js-form-dag" type="checkbox" id="vrijdag" name="weekdagen" value="5" />
+          <label for="vrijdag">vrijdag</label><br />
+          <input class="js-form-dag" type="checkbox" id="zaterdag" name="weekdagen" value="6" />
+          <label for="zaterdag">zaterdag</label><br />
+          <input class="js-form-dag" type="checkbox" id="zondag" name="weekdagen" value="0" />
+          <label for="zondag">zondag</label><br />
+        </div>
+        <br /><button class="js-form-button" type="button">submit</button>
+      </form>
+    </div>
   </body>
 </html>

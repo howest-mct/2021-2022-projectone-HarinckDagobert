@@ -50,6 +50,6 @@ class DataRepository:
     
     @staticmethod
     def update_device(waardewind, waardelicht, waardetemp,dagen):
-        sql = "UPDATE parameters SET waarde = CASE parid WHEN 1 THEN %s WHEN 2 THEN %s WHEN 3 THEN %s WHEN 4 THEN %s END WHERE deviceid IN (1,2,3,4);"
+        sql = "UPDATE parameters SET waarde = CASE parid WHEN 1 THEN %s WHEN 2 THEN %s WHEN 3 THEN %s WHEN 4 THEN %s END WHERE parid IN (1,2,3,4);"
         params = [waardewind, waardelicht, waardetemp,dagen]
         return Database.execute_sql(sql,params)

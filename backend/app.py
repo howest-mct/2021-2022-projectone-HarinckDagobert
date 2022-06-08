@@ -76,9 +76,10 @@ def lees_knop(pin):
         global schermStatus
         global schermOverride
         print("**** button pressed ****")
+        schermOverride = True
+        time.sleep(0.1)
         schermStatus = not schermStatus
         print(schermStatus)
-        schermOverride = True
 
 def verander_scherm(new_status):
     if new_status == True:
@@ -163,21 +164,24 @@ def maxmin_device():
             data = DataRepository.update_device(
                 gegevens["waardewind"], gegevens["waardelicht"], gegevens["waardetemp"],gegevens["dagen"])
             if data is not None:
+                socketio.emit('B2F_new_parameters',broadcast=True)
                 return jsonify(rijen=data), 200
             else:
                 return jsonify(message="error"), 404
 
 
-# @socketio.on('connect')
-# def initial_connection():
-    # print("client connects")
+@socketio.on('connect')
+def initial_connection():
+    print("client connects")
 
 @socketio.on('F2B_switch_scherm')
 def receive_switch_scherm():
     global schermStatus
     global schermOverride
-    schermStatus = not schermStatus
     schermOverride = True
+    time.sleep(0.1)
+    schermStatus = not schermStatus
+    print(schermStatus)
 
 
 
@@ -201,11 +205,12 @@ def start_historiek_thread():
 
 def realtime_sensoren():
     while True:
+        global schermStatus
         sens = lees_sensors()
         senswind = sens[2]
         senslicht = sens[1]
-        senstemp = sens[0]         
-        socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':senstemp,'licht':senslicht,'wind':senswind}}, broadcast=True)
+        senstemp = sens[0]        
+        socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':senstemp,'licht':senslicht,'wind':senswind, 'scherm':schermStatus}}, broadcast=True)
         time.sleep(2.1)
 
 def start_realtime_sensoren():
@@ -228,9 +233,9 @@ def check_params():
             senstemp = sens[0]
             dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
             if senswind < parwind and senslicht > parlicht and senstemp > partemp and dag in pardagen:
-                schermStatus = 1
+                schermStatus = True
             else:
-                schermStatus = 0
+                schermStatus = False
         else:
             schermOverride = False
             time.sleep(120)
@@ -304,7 +309,7 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        start_historiek_thread()
+        # start_historiek_thread()
         start_chrome_thread()
         start_realtime_sensoren()
         start_lcd_display()
