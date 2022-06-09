@@ -37,7 +37,7 @@ html {
  */
 
 ::selection {
-    background: #e85e00;
+    background: #0076D1;
     color: white;
     text-shadow: none;
 }
@@ -64,7 +64,7 @@ img {
 */
 
 h1 {
-    font-size: 36px;
+    font-size: 25px;
     line-height: 40px;
     margin: 0 0 24px;
     font-weight: 700;
@@ -139,18 +139,18 @@ hr {
 }
 
 a {
-    color: RoyalBlue;
+    color: #028DF9;
     transition: all .1s ease-in-out;
 }
 
 a:visited,
 a:active {
-    color: BlueViolet;
+    color: #028DF9;
 }
 
 a:hover,
 a:focus {
-    color: Crimson;
+    color: #004880;
 }
 
 /*------------------------------------*\
@@ -167,7 +167,17 @@ a:focus {
     padding: 24px 24px 0;
     display: flow-root;
 }
+/* color modifiers */
 
+.o-row--primary-x-dark {
+    color: #F2F5F7;
+    background-color: #005EA6;
+}
+
+.o-row--neutral-xx-dark {
+    color: #fff;
+    background: #20223A;
+}
 /* size modifiers */
 
 .o-row--lg {
@@ -289,6 +299,12 @@ a:focus {
     padding: 0 24px;
 }
 
+/*horizontal row modifier */
+
+.o-layout--row {
+    flex-direction: row;
+}
+
 /* reverse horizontal row modifier */
 
 .o-layout--row-reverse {
@@ -407,10 +423,118 @@ a:focus {
 \*------------------------------------*/
 
 /*
-    Component: Component name
+    Component: header
     ---
-    Component description
+    Main header of the website
 */
+
+.c-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.c-header__btn {
+    display:block;
+    margin: 0 0 24px;
+    color: #000
+}
+
+
+
+.c-header__titel {
+    /* justify-self: center; */
+}
+
+.c-header_rechts {
+    justify-content: flex-end;
+}
+.c-header_rechts {
+    justify-content: flex-start;
+}
+
+
+/*
+    Component: Nav
+    ---
+    Main navigation of the site
+*/
+
+.c-nav {
+    font-size: 14px;
+    line-height: 24px;
+}
+
+.c-nav__link {
+    text-decoration: none;
+    font-weight: 600;
+    display: block;
+    padding: 8px 0;
+}
+
+.c-nav__link,
+.c-nav__link:visited,
+.c-nav__link:active {
+    color: #4B4E6B;
+}
+
+.c-nav__link:hover,
+.c-nav__link:focus {
+    color: #3385FF;
+}
+
+@media (min-width: 992px) {
+    .c-nav__list {
+        display: flex;
+    }
+
+    .c-nav__item--cta {
+        margin-left: 20px;
+    }
+
+    .c-nav__link {
+        padding: 8px 20px;
+    }
+}
+
+/*
+    Component: Lead
+    ---
+    Lead type treatments to style everything that differs from standard typography elements
+*/
+
+.c-lead {
+    position: relative;
+}
+
+.c-lead--md {
+    font-size: 18px;
+    line-height: 32px;
+}
+
+.c-lead--lg {
+    font-size: 20px;
+    line-height: 32px;
+}
+
+.c-lead--xl {
+    font-size: 32px;
+    line-height: 40px;
+}
+
+@media (min-width: 768px) {
+    .c-lead--xl {
+        font-size: 41px;
+        line-height: 48px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .c-lead--xl {
+        font-size: 52px;
+        line-height: 64px;
+    }
+}
 
 /*------------------------------------*\
   #UTILITIES

@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Smart Zonnescherm</title>
-    <link rel="stylesheet" href="style/screen.css" />
-    <link rel="stylesheet" href="https://use.typekit.net/anq4gcx.css" />
 
     <script
       src="https://cdn.socket.io/4.0.1/socket.io.min.js"
@@ -22,8 +20,52 @@
 
     <script src="script/datahandler.js"></script>
     <script src="script/app.js"></script>
+
+    <link rel="stylesheet" href="style/normalize.css" />
+    <link rel="stylesheet" href="style/screen.css" />
+    <link rel="stylesheet" href="https://use.typekit.net/anq4gcx.css" />
   </head>
   <body>
+    <header class="o-row o-row--primary-x-dark">
+      <div class="o-container">
+        <div class="c-header">
+          <a href="manage.html" class="c-header__btn c-header_links">
+            <svg
+              id="Component_64_5"
+              data-name="Component 64 – 5"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <rect id="rectangle" width="24" height="24" fill="none" />
+              <path
+                id="path"
+                d="M19,6.4,17.6,5,12,10.6,6.4,5,5,6.4,10.6,12,5,17.6,6.4,19,12,13.4,17.6,19,19,17.6,13.4,12Z"
+                fill="#f2f5f7"
+                fill-rule="evenodd"
+              />
+            </svg>
+          </a>
+          <div class="c-header__titel">
+            <h1 class="c-titel">Bewerken</h1>
+          </div>
+          <div class="js-form-button c-header__btn c-header_links">
+            <svg
+              id="Component_67_3"
+              data-name="Component 67 – 3"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+            >
+              <rect id="rectangle" width="24" height="24" fill="none" />
+              <path id="path" d="M9,16.2,4.8,12,3.4,13.4,9,19,21,7,19.6,5.6Z" fill="#f2f5f7" fill-rule="evenodd" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </header>
     <div class="js-form">
       <form>
         <label for="waardetemp">Minimum temperatuur:</label><br />

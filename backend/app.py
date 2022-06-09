@@ -165,6 +165,7 @@ def maxmin_device():
                 gegevens["waardewind"], gegevens["waardelicht"], gegevens["waardetemp"],gegevens["dagen"])
             if data is not None:
                 socketio.emit('B2F_new_parameters',broadcast=True)
+                print()
                 return jsonify(rijen=data), 200
             else:
                 return jsonify(message="error"), 404
@@ -249,8 +250,8 @@ def check_status_scherm():
     while True:
         global schermStatus
         if vorigeStatus != schermStatus:
-            verander_scherm(schermStatus)
             vorigeStatus = schermStatus
+            verander_scherm(schermStatus)
 
 def start_check_status_scherm():
     thread = threading.Thread(target=check_status_scherm, args=(), daemon=True)
@@ -321,6 +322,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print ('KeyboardInterrupt exception is caught')
     finally:
+        verander_scherm(False)
         GPIO.cleanup()
 
 
