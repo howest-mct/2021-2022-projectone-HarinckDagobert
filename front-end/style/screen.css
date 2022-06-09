@@ -15,8 +15,9 @@
 html {
     font-size: 16px;
     line-height: 1.5;
-    font-family: "Helvetica Neue", Helvetica, arial, sans-serif;
-    color: #111;
+    font-family: "proxima-nova", arial, sans-serif;
+    color: #2D3033;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
@@ -66,12 +67,14 @@ h1 {
     font-size: 36px;
     line-height: 40px;
     margin: 0 0 24px;
+    font-weight: 700;
 }
 
 h2 {
     font-size: 23px;
     line-height: 32px;
     margin: 0 0 24px;
+    font-weight: 700;
 }
 
 h3 {
