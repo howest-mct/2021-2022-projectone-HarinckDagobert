@@ -89,6 +89,40 @@ const showParameters = function (jsonObject) {
   }
   htmlparameters.innerHTML = html;
 };
+
+const showParametersForm = function (jsonObject) {
+  for (const sensor of jsonObject.maxminWaarde) {
+    if (sensor.parid == 1) {
+      document.querySelector(".js-form-wind").value = sensor.waarde;
+    } else if (sensor.parid == 2) {
+      document.querySelector(".js-form-licht").value = sensor.waarde;
+    } else if (sensor.parid == 3) {
+      document.querySelector(".js-form-temp").value = sensor.waarde;
+    } else if (sensor.parid == 4) {
+      if (sensor.waarde.includes("1")) {
+        document.querySelector(".js-form-maandag").checked = true;
+      }
+      if (sensor.waarde.includes("2")) {
+        document.querySelector(".js-form-dinsdag").checked = true;
+      }
+      if (sensor.waarde.includes("3")) {
+        document.querySelector(".js-form-woensdag").checked = true;
+      }
+      if (sensor.waarde.includes("4")) {
+        document.querySelector(".js-form-donderdag").checked = true;
+      }
+      if (sensor.waarde.includes("5")) {
+        document.querySelector(".js-form-vrijdag").checked = true;
+      }
+      if (sensor.waarde.includes("6")) {
+        document.querySelector(".js-form-zaterdag").checked = true;
+      }
+      if (sensor.waarde.includes("0")) {
+        document.querySelector(".js-form-zondag").checked = true;
+      }
+    }
+  }
+};
 //#endregion
 
 //#region ***  Callback-No Visualisation - callback___  ***********
@@ -104,6 +138,10 @@ const getHistoriek = function () {
 
 const getParametersZon = function () {
   handleData(`http://${lanIP}/api/v1/device/`, showParameters);
+};
+
+const getParametersForm = function () {
+  handleData(`http://${lanIP}/api/v1/device/`, showParametersForm);
 };
 //#endregion
 
@@ -172,6 +210,7 @@ const init = function () {
     listenToButtonScherm();
     listenToSocketPar();
   } else if (htmlform) {
+    getParametersForm();
     listenToForm();
   }
 };
