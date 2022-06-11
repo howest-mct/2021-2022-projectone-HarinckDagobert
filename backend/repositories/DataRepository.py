@@ -12,7 +12,7 @@ class DataRepository:
 
     @staticmethod
     def read_historiek():
-        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek"
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek ORDER by datum DESC"
         return Database.get_rows(sql)
 
     @staticmethod

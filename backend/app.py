@@ -64,6 +64,11 @@ def omzetwind(value):
     except:
         return "error"
 
+def new_par():
+    global par
+    par = DataRepository.read_maxmin_device()
+
+
 def lees_sensors():
     temp = round(omzettemp(spiClassObj.read_channel(1)),2)
     licht = round(omzetlux(spiClassObj.read_channel(2)))
@@ -129,26 +134,7 @@ def get_historiek_by_date(date):
         if data is not None:
             return jsonify(historiek_date=data), 200
         else:
-            return jsonify(message="error"), 404
-
-@app.route(endpoint + '/historiek/device/<device_id>/', methods=['GET'])
-def get_historiek_by_device(device_id):
-    if request.method == 'GET':
-        data=DataRepository.read_historiek_by_device(device_id)
-        if data is not None:
-            return jsonify(historiek_device=data), 200
-        else:
-            return jsonify(message="error"), 404
-        
-
-@app.route(endpoint + '/historiek/device/<device_id>/<date>/', methods=['GET'])
-def get_historiek_by_date_device(device_id,date):
-    if request.method == 'GET':
-        data=DataRepository.read_historiek_by_date_en_device(device_id,date)
-        if data is not None:
-            return jsonify(historiek_device_by_date=data), 200
-        else:
-            return jsonify(message="error"), 404
+            return jsonify(message="error"), 404    
 
 @app.route(endpoint + '/device/', methods=['GET','PUT'])
 def maxmin_device():
@@ -163,9 +149,9 @@ def maxmin_device():
             print(gegevens)
             data = DataRepository.update_device(
                 gegevens["waardewind"], gegevens["waardelicht"], gegevens["waardetemp"],gegevens["dagen"])
+            new_par()
             if data is not None:
                 socketio.emit('B2F_new_parameters',broadcast=True)
-                print()
                 return jsonify(rijen=data), 200
             else:
                 return jsonify(message="error"), 404
@@ -311,11 +297,11 @@ if __name__ == '__main__':
     try:
         setup_gpio()
         # start_historiek_thread()
+        new_par()
         start_chrome_thread()
         start_realtime_sensoren()
         start_lcd_display()
         start_check_status_scherm()
-        par = DataRepository.read_maxmin_device()
         start_check_params()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')

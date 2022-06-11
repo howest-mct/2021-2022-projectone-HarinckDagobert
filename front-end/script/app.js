@@ -79,7 +79,7 @@ const showParameters = function (jsonObject) {
         waarde += "vrijdag ";
       }
       if (sensor.waarde.includes("6")) {
-        waarde += "vrijdag ";
+        waarde += "zaterdag ";
       }
       if (sensor.waarde.includes("0")) {
         waarde += "zondag ";
