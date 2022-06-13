@@ -37,13 +37,16 @@ const showHistoriek = function (jsonObject) {
 const showRealtime = function (jsonObject) {
   const arrsensors = jsonObject.sensoren;
   let waardeScherm;
-  console.log(arrsensors.scherm);
   if (arrsensors.scherm == 1) {
     waardeScherm = "open";
   } else if (arrsensors.scherm == 0) {
     waardeScherm = "dicht";
   }
   htmlsensor.innerHTML = `<p>temperatuur ${arrsensors.temp} C   lichtsterkte: ${arrsensors.licht} lux   windsterkte: ${arrsensors.wind} m/s  scherm: ${waardeScherm}</p>`;
+};
+
+const showKnopstate = function (jsonObject) {
+  console.log("scherm verandered");
 };
 
 const showParameters = function (jsonObject) {
@@ -159,6 +162,17 @@ const listenToSocketHistoriek = function () {
     console.log("new historiek");
     getHistoriek();
   });
+
+  socket.on("B2F_new_scherm", function (jsonObject) {
+    const btn = document.querySelector(".js-scherm-button");
+    btn.classList.remove("c-scherm-button-off");
+    btn.classList.remove("c-scherm-button-on");
+    if (jsonObject.status == true) {
+      btn.classList("c-scherm-button-on");
+    } else if (jsonObject.status == False) {
+      btn.classList("c-scherm-button-off");
+    }
+  });
 };
 const listenToSocketPar = function () {
   socket.on("B2F_new_parameters", function () {
@@ -205,9 +219,9 @@ const init = function () {
   if (htmlhistoriek) {
     getHistoriek();
     listenToSocketHistoriek();
+    listenToButtonScherm();
   } else if (htmlparameters) {
     getParametersZon();
-    listenToButtonScherm();
     listenToSocketPar();
   } else if (htmlform) {
     getParametersForm();

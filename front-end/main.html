@@ -6,11 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
     <title>Smart Zonnescherm</title>
 
-    <script
-      src="https://cdn.socket.io/4.0.1/socket.io.min.js"
-      integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU"
-      crossorigin="anonymous"
-    ></script>
+    <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous"></script>
 
     <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
     <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
@@ -35,14 +31,7 @@
           <a href="manage.html" class="c-header__btn">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <g id="settings-24px" transform="translate(-16 -16)">
-                <rect
-                  id="Rectangle_241"
-                  data-name="Rectangle 241"
-                  width="24"
-                  height="24"
-                  transform="translate(16 16)"
-                  fill="none"
-                />
+                <rect id="Rectangle_241" data-name="Rectangle 241" width="24" height="24" transform="translate(16 16)" fill="none" />
                 <path
                   id="settings"
                   d="M12,15.516A3.515,3.515,0,1,0,8.485,12,3.52,3.52,0,0,0,12,15.516Zm7.453-2.532,2.109,1.641q.328.234.094.656L19.64,18.75a.457.457,0,0,1-.609.188l-2.484-.984a8.451,8.451,0,0,1-1.688.984l-.375,2.625a.458.458,0,0,1-.469.422H9.984a.458.458,0,0,1-.469-.422L9.14,18.938a7.681,7.681,0,0,1-1.688-.984l-2.484.984a.455.455,0,0,1-.609-.188L2.343,15.281q-.234-.422.094-.656l2.109-1.641A7.549,7.549,0,0,1,4.5,12a7.549,7.549,0,0,1,.047-.984L2.437,9.375q-.328-.234-.094-.656L4.359,5.25a.457.457,0,0,1,.609-.188l2.484.984A8.451,8.451,0,0,1,9.14,5.062l.375-2.625a.458.458,0,0,1,.469-.422h4.031a.458.458,0,0,1,.469.422l.375,2.625a7.681,7.681,0,0,1,1.688.984l2.484-.984a.455.455,0,0,1,.609.188l2.016,3.469q.234.422-.094.656l-2.109,1.641A7.549,7.549,0,0,1,19.5,12a7.549,7.549,0,0,1-.047.984Z"
@@ -59,9 +48,27 @@
       <div class="o-container">
         <div class="o-layout">
           <div class="o-layout__item">
+            <h2>Sensoren:</h2>
             <div class="js-sensors">data</div>
           </div>
           <div class="o-layout__item">
+            <h2>Knop zonnescherm:</h2>
+            <div class="c-scherm-button c-scherm-button-off js-scherm-button">
+              <div class="c-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="24" viewBox="0 0 30 24">
+                  <path
+                    id="nest_sunblock_FILL0_wght400_GRAD0_opsz48"
+                    d="M4,12.5V8H6.25v4.5ZM4,32V27.5H6.25V32Zm7.612-16.5L10,13.888,13.187,10.7,14.8,12.313Zm1.575,13.8L10,26.112,11.612,24.5,14.8,27.687ZM13,21.125v-2.25H23.125l-3.3-4.388,1.8-1.35,4.65,6.187a1.074,1.074,0,0,1,.112,1.181,1.04,1.04,0,0,1-1.012.619ZM32.125,30.5a1.922,1.922,0,0,1-1.875-1.875V11.375a1.78,1.78,0,0,1,.563-1.331A1.829,1.829,0,0,1,32.125,9.5,1.857,1.857,0,0,1,34,11.375v17.25a1.829,1.829,0,0,1-.544,1.313A1.78,1.78,0,0,1,32.125,30.5ZM4,25.625v-2.25a3.23,3.23,0,0,0,2.4-.994A3.366,3.366,0,0,0,4,16.625v-2.25a5.431,5.431,0,0,1,3.994,1.631,5.682,5.682,0,0,1,0,7.969A5.4,5.4,0,0,1,4,25.625Z"
+                    transform="translate(-4 -8)"
+                    fill="#2d3033"
+                  />
+                </svg>
+                <p class="c-button-tekst">zonnescherm</p>
+              </div>
+            </div>
+          </div>
+          <div class="o-layout__item">
+            <h2>Historiek:</h2>
             <ol class="js-historiek"></ol>
           </div>
         </div>

@@ -43,6 +43,7 @@ class lcd:
     def clear_LCD(self):
         self.__teller = 0
         self.send_instructions(0b00000001)
+        self.LCD_move_cursor(0x00)
 
     def LCD_move_cursor(self, adres):
         self.send_instructions(0x80 | adres)
@@ -55,16 +56,16 @@ class lcd:
         GPIO.output(self.__E, GPIO.HIGH)
         # value = byte, loop through bits (mask) and set data pins
 
-    def second_row(self):
-        self.send_instructions(0xC0)
-        self.__teller = 18
+    # def second_row(self):
+    #     self.send_instructions(0xC0)
+    #     self.__teller = 18
 
     def displayOn(self):
-        self.send_instructions(0b00001111)
+        self.send_instructions(0b00001100)
 
     def send_message(self, msg):
         for i in msg:
-            self.__teller += 1
-            if self.__teller == 17:
-                self.second_row()
+        #     self.__teller += 1
+        #     if self.__teller == 17:
+        #         self.second_row()
             self.send_character(ord(i))

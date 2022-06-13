@@ -44,7 +44,7 @@ def setup_gpio():
 def omzettemp(value):
     try:
         untc = (value/1023) * 3.3
-        temp = untc*(-33.333) + 113.33
+        temp = untc*(-33.333) + 73.33
         return (temp)
     except:
         return "error"
@@ -52,7 +52,7 @@ def omzettemp(value):
 def omzetlux(value):
     try:
         ldrv = (value/1023) * 3.3
-        ldrlux = (500/ldrv)
+        ldrlux = (560/ldrv)
         return ldrlux
     except:
         return "error"
@@ -89,10 +89,12 @@ def lees_knop(pin):
 def verander_scherm(new_status):
     if new_status == True:
         print("zonnescherm opent")
-        steppobj.rechts()
+        socketio.emit('B2F_new_scherm', {'status': schermStatus},broadcast=True)
+        steppobj.links()
     elif new_status == False:
         print("zonnescherm sluit")
-        steppobj.links()
+        socketio.emit('B2F_new_scherm', {'status': schermStatus},broadcast=True)
+        steppobj.rechts()
     
 
 # Code voor Flask
@@ -159,7 +161,8 @@ def maxmin_device():
 
 @socketio.on('connect')
 def initial_connection():
-    print("client connects")
+    global schermStatus
+    socketio.emit('B2F_new_scherm', {'status': schermStatus})
 
 @socketio.on('F2B_switch_scherm')
 def receive_switch_scherm():
@@ -244,12 +247,29 @@ def start_check_status_scherm():
     thread.start()
 
 def lcd_display():
+    lcdobj.send_message("ip-address:")
+    msg = check_output(
+        ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
+    lcdobj.LCD_move_cursor(0x40)
+    time.sleep(0.1)
+    lcdobj.send_message(msg)
+    time.sleep(20)
+    lcdobj.clear_LCD()
     while True:
-        msg = check_output(
-            ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
+        sens = lees_sensors()
+        senswind = sens[2]
+        senslicht = sens[1]
+        senstemp = sens[0]
+        lcdobj.LCD_move_cursor(0x00)
+        lcdobj.send_message(f"W:{senswind}ms")
         lcdobj.LCD_move_cursor(0x40)
-        lcdobj.send_message(msg)
-        
+        lcdobj.send_message(f"L:{senslicht}L")
+        lcdobj.LCD_move_cursor(0x48)
+        lcdobj.send_message(f"T:{senstemp}C")
+        time.sleep(1)
+        lcdobj.clear_LCD()
+
+
 def start_lcd_display():
     thread = threading.Thread(target=lcd_display, args=(), daemon=True)
     thread.start()
