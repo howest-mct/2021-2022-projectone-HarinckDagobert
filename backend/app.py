@@ -330,6 +330,7 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print ('KeyboardInterrupt exception is caught')
     finally:
+        lcdobj.clear_LCD()
         if schermStatus == True:
             verander_scherm(False)
         GPIO.cleanup()
