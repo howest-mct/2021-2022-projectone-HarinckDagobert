@@ -52,7 +52,7 @@ def omzettemp(value):
 def omzetlux(value):
     try:
         ldrv = (value/1023) * 3.3
-        ldrlux = (560/ldrv)
+        ldrlux = (960/ldrv)
         return ldrlux
     except:
         return "error"
@@ -168,6 +168,7 @@ def initial_connection():
 def receive_switch_scherm():
     global schermStatus
     global schermOverride
+    global sens
     schermOverride = True
     time.sleep(0.1)
     schermStatus = not schermStatus
@@ -181,7 +182,7 @@ def receive_switch_scherm():
 def meting_historiek():
     while True:
         print('*** We zetten op historiek **')
-        sens = lees_sensors()
+        global sens
         DataRepository.insert_into_historiek(sens[0],None,3,None)
         DataRepository.insert_into_historiek(sens[1],None,2,None)
         DataRepository.insert_into_historiek(sens[2],None,1,None)
@@ -196,7 +197,7 @@ def start_historiek_thread():
 def realtime_sensoren():
     while True:
         global schermStatus
-        sens = lees_sensors()
+        global sens
         senswind = sens[2]
         senslicht = sens[1]
         senstemp = sens[0]        
@@ -212,6 +213,7 @@ def check_params():
         global schermStatus
         global schermOverride
         global par
+        global sens
         if schermOverride == False:
             parwind = int(par[0]["waarde"])
             parlicht = int(par[1]["waarde"])
@@ -256,11 +258,12 @@ def lcd_display():
     time.sleep(20)
     lcdobj.clear_LCD()
     while True:
-        sens = lees_sensors()
+        global sens
         senswind = sens[2]
         senslicht = sens[1]
         senstemp = sens[0]
         lcdobj.LCD_move_cursor(0x00)
+        time.sleep(0.0001)
         lcdobj.send_message(f"W:{senswind}ms")
         lcdobj.LCD_move_cursor(0x40)
         lcdobj.send_message(f"L:{senslicht}L")
@@ -316,13 +319,13 @@ def start_chrome_thread():
 if __name__ == '__main__':
     try:
         setup_gpio()
-        # start_historiek_thread()
         new_par()
         start_chrome_thread()
+        start_check_params()
         start_realtime_sensoren()
+        # start_historiek_thread()
         start_lcd_display()
         start_check_status_scherm()
-        start_check_params()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:

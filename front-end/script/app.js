@@ -168,15 +168,14 @@ const listenToSocketHistoriek = function () {
     btn.classList.remove("c-scherm-button-off");
     btn.classList.remove("c-scherm-button-on");
     if (jsonObject.status == true) {
-      btn.classList("c-scherm-button-on");
-    } else if (jsonObject.status == False) {
-      btn.classList("c-scherm-button-off");
+      btn.classList.add("c-scherm-button-on");
+    } else if (jsonObject.status == false) {
+      btn.classList.add("c-scherm-button-off");
     }
   });
 };
 const listenToSocketPar = function () {
   socket.on("B2F_new_parameters", function () {
-    console.log("test");
     getParametersZon();
   });
 };
@@ -202,7 +201,6 @@ const listenToForm = function () {
 };
 const listenToButtonScherm = function () {
   htmlzonbtn.addEventListener("click", function () {
-    console.log("click");
     socket.emit("F2B_switch_scherm");
   });
 };
