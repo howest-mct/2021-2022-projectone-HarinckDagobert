@@ -42,7 +42,11 @@ const showRealtime = function (jsonObject) {
   } else if (arrsensors.scherm == 0) {
     waardeScherm = "dicht";
   }
-  htmlsensor.innerHTML = `<p>temperatuur ${arrsensors.temp} C   lichtsterkte: ${arrsensors.licht} lux   windsterkte: ${arrsensors.wind} m/s  scherm: ${waardeScherm}</p>`;
+  htmlsensor.innerHTML = `<h2>Sensoren:</h2>
+              <p>Wind:  ${arrsensors.wind} m/s</p>
+              <p>Licht: ${arrsensors.licht} Lux</p>
+              <p>Temp: ${arrsensors.temp} C°</p>
+              <p>Scherm: ${waardeScherm}</p>`;
 };
 
 const showKnopstate = function (jsonObject) {
@@ -130,7 +134,7 @@ const showParametersForm = function (jsonObject) {
 
 //#region ***  Callback-No Visualisation - callback___  ***********
 const callbackUpdateForms = function () {
-  window.location.href = "manage.html";
+  window.location.href = "main.html";
 };
 //#endregion
 

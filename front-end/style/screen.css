@@ -98,7 +98,7 @@ dl,
 table,
 address,
 figure {
-    margin: 0 0 24px;
+    margin: 0 0 4px;
 }
 
 ul,
@@ -309,6 +309,12 @@ a:focus {
 
 .o-layout--row-reverse {
     flex-direction: row-reverse;
+}
+
+/*vertical row modifier */
+
+.o-layout--column {
+    flex-direction: column;
 }
 
 /* Horizontal alignment modifiers*/

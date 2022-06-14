@@ -44,25 +44,24 @@ def setup_gpio():
 def omzettemp(value):
     try:
         untc = (value/1023) * 3.3
-        temp = untc*(-33.333) + 73.33
+        temp = untc*(-33.333) + 75.33
         return (temp)
     except:
-        return "error"
-
+        return 0
 def omzetlux(value):
     try:
         ldrv = (value/1023) * 3.3
         ldrlux = (960/ldrv)
         return ldrlux
     except:
-        return "error"
+        return 0
 
 def omzetwind(value):
     try:
         w = ((value-124)/496) * 32.4
         return w
     except:
-        return "error"
+        return 0
 
 def new_par():
     global par
@@ -323,7 +322,7 @@ if __name__ == '__main__':
         start_chrome_thread()
         start_check_params()
         start_realtime_sensoren()
-        # start_historiek_thread()
+        start_historiek_thread()
         start_lcd_display()
         start_check_status_scherm()
         print("**** Starting APP ****")
@@ -331,7 +330,8 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print ('KeyboardInterrupt exception is caught')
     finally:
-        verander_scherm(False)
+        if schermStatus == True:
+            verander_scherm(False)
         GPIO.cleanup()
 
 
