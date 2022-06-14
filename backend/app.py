@@ -1,5 +1,6 @@
 import time
 from math import log
+from statistics import mean
 from RPi import GPIO
 from helpers.klasseknop import Button
 from helpers.spiclass import SpiClass
@@ -24,6 +25,7 @@ endpoint = '/api/v1'
 btnPin = Button(17)
 schermStatus = False
 schermOverride = False
+schermOverride_Wind = False
 spiClassObj = SpiClass(0, 0)
 steppobj = stepClass([6,13,19,26])
 E = 23
@@ -76,7 +78,8 @@ def lees_sensors():
     
 def lees_knop(pin):
     global steppobj
-    if btnPin.pressed:
+    global schermOverride_Wind
+    if btnPin.pressed and schermOverride_Wind == False:
         global schermStatus
         global schermOverride
         print("**** button pressed ****")
@@ -165,13 +168,14 @@ def initial_connection():
 
 @socketio.on('F2B_switch_scherm')
 def receive_switch_scherm():
+    global schermOverride_Wind
     global schermStatus
     global schermOverride
-    global sens
-    schermOverride = True
-    time.sleep(0.1)
-    schermStatus = not schermStatus
-    print(schermStatus)
+    if schermOverride_Wind == False:
+        schermOverride = True
+        time.sleep(0.1)
+        schermStatus = not schermStatus
+        print(schermStatus)
 
 
 
@@ -211,28 +215,51 @@ def check_params():
     while True:
         global schermStatus
         global schermOverride
+        global schermOverride_Wind
         global par
         global sens
-        if schermOverride == False:
-            parwind = int(par[0]["waarde"])
+        if schermOverride == False and schermOverride_Wind == False:
             parlicht = int(par[1]["waarde"])
             partemp = int(par[2]["waarde"])
             pardagen = par[3]["waarde"]
-            sens = lees_sensors()
-            senswind = sens[2]
-            senslicht = sens[1]
-            senstemp = sens[0]
+            senslicht_first = sens[1]
+            senstemp_first = sens[0]
+            time.sleep(10)
+            sens2 = lees_sensors()
+            senslicht_sec = sens2[1]
+            senstemp_sec = sens2[0]
+            av_licht = mean([senslicht_first,senslicht_sec])
+            av_temp = mean([senstemp_first,senstemp_sec])
             dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
-            if senswind < parwind and senslicht > parlicht and senstemp > partemp and dag in pardagen:
+            if av_licht > parlicht and av_temp > partemp and dag in pardagen:
                 schermStatus = True
             else:
-                schermStatus = False
+                schermStatus = False    
         else:
             schermOverride = False
             time.sleep(120)
 
 def start_check_params():
     thread = threading.Thread(target=check_params, args=(), daemon=True)
+    thread.start()
+
+def check_par_wind():
+    while True:
+        global schermStatus
+        global schermOverride_Wind
+        global par
+        global sens
+        parwind = int(par[0]["waarde"])
+        sens = lees_sensors()
+        senswind = sens[2]
+        if senswind < parwind:
+            schermOverride_Wind = False
+        else:
+            schermOverride_Wind = True
+            schermStatus = False
+
+def start_check_par_wind():
+    thread = threading.Thread(target=check_par_wind, args=(), daemon=True)
     thread.start()
 
 def check_status_scherm():
@@ -252,24 +279,25 @@ def lcd_display():
     msg = check_output(
         ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
     lcdobj.LCD_move_cursor(0x40)
-    time.sleep(0.1)
     lcdobj.send_message(msg)
-    time.sleep(20)
+    time.sleep(9)
     lcdobj.clear_LCD()
     while True:
         global sens
+        time.sleep(1)
+        lcdobj.clear_LCD()
         senswind = sens[2]
         senslicht = sens[1]
         senstemp = sens[0]
         lcdobj.LCD_move_cursor(0x00)
-        time.sleep(0.0001)
+        time.sleep(0.00001)
         lcdobj.send_message(f"W:{senswind}ms")
         lcdobj.LCD_move_cursor(0x40)
+        time.sleep(0.00001)
         lcdobj.send_message(f"L:{senslicht}L")
         lcdobj.LCD_move_cursor(0x48)
+        time.sleep(0.00001)
         lcdobj.send_message(f"T:{senstemp}C")
-        time.sleep(1)
-        lcdobj.clear_LCD()
 
 
 def start_lcd_display():
@@ -320,6 +348,7 @@ if __name__ == '__main__':
         setup_gpio()
         new_par()
         start_chrome_thread()
+        start_check_par_wind()
         start_check_params()
         start_realtime_sensoren()
         start_historiek_thread()
@@ -330,9 +359,9 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         print ('KeyboardInterrupt exception is caught')
     finally:
-        lcdobj.clear_LCD()
         if schermStatus == True:
             verander_scherm(False)
+        lcdobj.clear_LCD()
         GPIO.cleanup()
 
 
