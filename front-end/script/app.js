@@ -19,6 +19,11 @@ const DrawTempChartFirst = function (labels, data) {
     dataLabels: {
       enabled: false,
     },
+    colors: ["#4BADF9"],
+    grid: {
+      show: true,
+      borderColor: "#899299",
+    },
     series: [
       {
         name: "Celsius:",
@@ -34,18 +39,15 @@ const DrawTempChartFirst = function (labels, data) {
   chart.render();
 };
 const UpdateChart = function (labels, data) {
-  chart.updateSeries([
-    {
-      name: meeteenheid,
-      data: data,
-    },
-  ]);
-  chart.updateSeries([
-    {
-      name: meeteenheid,
-      data: data,
-    },
-  ]);
+  chart.updateOptions({
+    series: [
+      {
+        name: meeteenheid,
+        data: data,
+      },
+    ],
+    labels: labels,
+  });
 };
 //#endregion
 

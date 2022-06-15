@@ -303,14 +303,17 @@ def start_check_status_scherm():
     thread.start()
 
 def lcd_display():
-    lcdobj.send_message("ip-address:")
-    lcdobj.LCD_move_cursor(0x40)
-    time.sleep(0.1)
-    msg = check_output(
-        ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
-    lcdobj.send_message(msg)
-    time.sleep(9)
-    lcdobj.clear_LCD()
+    time.sleep(5)
+    for i in range(20):
+        time.sleep(0.00001)
+        lcdobj.send_message("ip-address:")
+        lcdobj.LCD_move_cursor(0x40)
+        time.sleep(0.00001)
+        msg = check_output(
+            ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
+        lcdobj.send_message(msg)
+        time.sleep(1)
+        lcdobj.clear_LCD()
     while True:
         global sens
         time.sleep(1)
