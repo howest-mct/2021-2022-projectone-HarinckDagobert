@@ -3,7 +3,7 @@
 //#region ***  DOM references                           ***********
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`${lanIP}`);
-let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown;
+let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown, htmlformbtn;
 //#endregion
 //#region others
 const DrawTempChartFirst = function (labels, data) {
@@ -93,7 +93,7 @@ const showRealtime = function (jsonObject) {
               <p>Scherm: ${waardeScherm}</p>`;
 };
 
-const showKnopstate = function (jsonObject) {
+const showKnopstate = function () {
   console.log("scherm verandered");
 };
 
@@ -173,6 +173,19 @@ const showParametersForm = function (jsonObject) {
       }
     }
   }
+};
+
+const showDefaultValues = function () {
+  document.querySelector(".js-form-wind").value = 6;
+  document.querySelector(".js-form-licht").value = 2000;
+  document.querySelector(".js-form-temp").value = 20;
+  document.querySelector(".js-form-maandag").checked = false;
+  document.querySelector(".js-form-dinsdag").checked = false;
+  document.querySelector(".js-form-woensdag").checked = false;
+  document.querySelector(".js-form-donderdag").checked = false;
+  document.querySelector(".js-form-vrijdag").checked = true;
+  document.querySelector(".js-form-zaterdag").checked = true;
+  document.querySelector(".js-form-zondag").checked = true;
 };
 //#endregion
 
@@ -277,6 +290,13 @@ const listenToUI = function () {
     }
   });
 };
+
+const listenToUIforms = function () {
+  console.log(htmlformbtn);
+  htmlformbtn.addEventListener("click", function () {
+    showDefaultValues();
+  });
+};
 //#endregion
 
 //#region ***  Init / DOMContentLoaded                  ***********
@@ -287,16 +307,15 @@ const init = function () {
   htmlzonbtn = document.querySelector(".js-scherm-button");
   htmlparameters = document.querySelector(".js-parameters");
   htmldropdown = document.querySelector(".js-dropdown");
+  htmlformbtn = document.querySelector(".js-default-button");
   console.info("DOM geladen");
   if (htmlhistoriekTemp) {
     getHistoriekTempFirst();
     listenToSocketHistoriek();
     listenToUI();
-  } else if (htmlparameters) {
-    getParametersZon();
-    listenToSocketPar();
-  } else if (htmlform) {
+  } else if (htmlformbtn) {
     getParametersForm();
+    listenToUIforms();
     listenToForm();
   }
 };
