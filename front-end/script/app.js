@@ -6,7 +6,7 @@ const socket = io(`${lanIP}`);
 let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown;
 //#endregion
 //#region others
-const showTempChartFirst = function (labels, data) {
+const DrawTempChartFirst = function (labels, data) {
   var options = {
     chart: {
       id: "TempChart",
@@ -34,14 +34,12 @@ const showTempChartFirst = function (labels, data) {
   chart.render();
 };
 const UpdateChart = function (labels, data, meeteenheid) {
-  let chart = new ApexCharts(document.querySelector(".js-chart"), options);
   chart.updateSeries([
     {
       name: meeteenheid,
       data: data,
     },
   ]);
-  chart.render();
 };
 //#endregion
 
@@ -56,7 +54,28 @@ const ShowTempChart = function (jsonObject) {
     converted_labels.push(meting.datum);
     converted_data.push(meting.waarde);
   }
-  drawTempChart(converted_labels, converted_data);
+  DrawTempChartFirst(converted_labels, converted_data);
+};
+const ShowUpdatedChart = function (jsonObject) {
+  let meeteenheid;
+  switch (jsonObject.historiek_device.devicid) {
+    case "1":
+      meeteenheid = "m/s";
+      break;
+    case "2":
+      meeteenheid = "Lux";
+      break;
+    case "3":
+      meeteenheid = "Celsius";
+      break;
+  }
+  let converted_labels = [];
+  let converted_data = [];
+  for (const meting of jsonObject.historiek_device) {
+    converted_labels.push(meting.datum);
+    converted_data.push(meting.waarde);
+  }
+  UpdateChart(converted_labels, converted_data, meeteenheid);
 };
 
 const showRealtime = function (jsonObject) {
@@ -165,18 +184,18 @@ const callbackUpdateForms = function () {
 
 //#region ***  Data Access - get___                     ***********
 const getHistoriekWind = function () {
-  handleData(`http://${lanIP}/api/v1/historiek/today/device/1/`, ShowTempChart);
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/1/`, ShowUpdatedChart);
 };
 
 const getHistoriekLicht = function () {
-  handleData(`http://${lanIP}/api/v1/historiek/today/device/2/`, ShowTempChart);
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/2/`, ShowUpdatedChart);
 };
 
 const getHistoriekTemp = function () {
-  handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowTempChart);
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowUpdatedChart);
 };
 const getHistoriekTempFirst = function () {
-  handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, showTempChartFirst);
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowTempChart);
 };
 
 const getParametersZon = function () {
