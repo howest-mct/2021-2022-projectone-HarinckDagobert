@@ -11,6 +11,11 @@ class DataRepository:
         return gegevens
 
     @staticmethod
+    def read_last_scherm_state():
+        sql = "SELECT volgnummer, waarde, actieid, deviceid from historiek WHERE volgnummer = (SELECT MAX(volgnummer) FROM historiek WHERE deviceid = 4)"
+        return Database.get_one_row(sql)
+    
+    @staticmethod
     def read_historiek():
         sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek ORDER by datum DESC"
         return Database.get_rows(sql)   

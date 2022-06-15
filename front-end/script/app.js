@@ -3,7 +3,7 @@
 //#region ***  DOM references                           ***********
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`${lanIP}`);
-let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown, htmlformbtn;
+let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown, htmlformbtn, chart, meeteenheid;
 //#endregion
 //#region others
 const DrawTempChartFirst = function (labels, data) {
@@ -30,10 +30,16 @@ const DrawTempChartFirst = function (labels, data) {
       text: "Loading...",
     },
   };
-  let chart = new ApexCharts(document.querySelector(".js-chart"), options);
+  chart = new ApexCharts(document.querySelector(".js-chart"), options);
   chart.render();
 };
-const UpdateChart = function (labels, data, meeteenheid) {
+const UpdateChart = function (labels, data) {
+  chart.updateSeries([
+    {
+      name: meeteenheid,
+      data: data,
+    },
+  ]);
   chart.updateSeries([
     {
       name: meeteenheid,
@@ -57,25 +63,13 @@ const ShowTempChart = function (jsonObject) {
   DrawTempChartFirst(converted_labels, converted_data);
 };
 const ShowUpdatedChart = function (jsonObject) {
-  let meeteenheid;
-  switch (jsonObject.historiek_device.devicid) {
-    case "1":
-      meeteenheid = "m/s";
-      break;
-    case "2":
-      meeteenheid = "Lux";
-      break;
-    case "3":
-      meeteenheid = "Celsius";
-      break;
-  }
   let converted_labels = [];
   let converted_data = [];
   for (const meting of jsonObject.historiek_device) {
     converted_labels.push(meting.datum);
     converted_data.push(meting.waarde);
   }
-  UpdateChart(converted_labels, converted_data, meeteenheid);
+  UpdateChart(converted_labels, converted_data);
 };
 
 const showRealtime = function (jsonObject) {
@@ -86,7 +80,7 @@ const showRealtime = function (jsonObject) {
   } else if (arrsensors.scherm == 0) {
     waardeScherm = "dicht";
   }
-  htmlsensor.innerHTML = `<h2>Sensoren:</h2>
+  htmlsensor.innerHTML = `<h2>Weersomstandigheden:</h2>
               <p>Wind:  ${arrsensors.wind} m/s</p>
               <p>Licht: ${arrsensors.licht} Lux</p>
               <p>Temp: ${arrsensors.temp} C°</p>
@@ -197,14 +191,17 @@ const callbackUpdateForms = function () {
 
 //#region ***  Data Access - get___                     ***********
 const getHistoriekWind = function () {
+  meeteenheid = "m/s";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/1/`, ShowUpdatedChart);
 };
 
 const getHistoriekLicht = function () {
+  meeteenheid = "Lux";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/2/`, ShowUpdatedChart);
 };
 
 const getHistoriekTemp = function () {
+  meeteenheid = "Celsius";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowUpdatedChart);
 };
 const getHistoriekTempFirst = function () {
@@ -232,7 +229,17 @@ const listenToSocketHistoriek = function () {
 
   socket.on("B2F_new_historiek", function () {
     console.log("new historiek");
-    getHistoriekTemp();
+    switch (htmldropdown.value) {
+      case "1":
+        getHistoriekWind();
+        break;
+      case "2":
+        getHistoriekLicht();
+        break;
+      case "3":
+        getHistoriekTemp();
+        break;
+    }
   });
 
   socket.on("B2F_new_scherm", function (jsonObject) {
@@ -276,7 +283,6 @@ const listenToUI = function () {
     socket.emit("F2B_switch_scherm");
   });
   htmldropdown.addEventListener("change", function () {
-    console.log(htmldropdown.value);
     switch (htmldropdown.value) {
       case "1":
         getHistoriekWind();
@@ -292,7 +298,6 @@ const listenToUI = function () {
 };
 
 const listenToUIforms = function () {
-  console.log(htmlformbtn);
   htmlformbtn.addEventListener("click", function () {
     showDefaultValues();
   });

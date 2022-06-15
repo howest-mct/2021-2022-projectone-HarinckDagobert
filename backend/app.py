@@ -24,6 +24,7 @@ endpoint = '/api/v1'
 #hardware setup
 btnPin = Button(17)
 schermStatus = False
+vorigeStatus = False
 schermOverride = False
 schermOverride_Wind = False
 spiClassObj = SpiClass(0, 0)
@@ -97,7 +98,7 @@ def verander_scherm(new_status):
         print("zonnescherm sluit")
         socketio.emit('B2F_new_scherm', {'status': schermStatus},broadcast=True)
         steppobj.rechts()
-    
+
 
 # Code voor Flask
 
@@ -273,13 +274,29 @@ def start_check_par_wind():
     thread = threading.Thread(target=check_par_wind, args=(), daemon=True)
     thread.start()
 
+def check_vorige_scherm():
+    global schermStatus
+    global vorigeStatus
+    vorigestatus = DataRepository.read_last_scherm_state()['waarde']
+    if vorigestatus == 1:
+        vorigeStatus = True
+        schermStatus = True
+    elif vorigestatus == 0:
+        vorigeStatus = False
+        schermStatus = False
+        
 def check_status_scherm():
-    vorigeStatus = False
     while True:
         global schermStatus
+        global vorigeStatus
         if vorigeStatus != schermStatus:
             vorigeStatus = schermStatus
             verander_scherm(schermStatus)
+            if schermStatus == True:
+                actieid = 1
+            elif schermStatus == False:
+                actieid = 2
+            DataRepository.insert_into_historiek(schermStatus,None,4,actieid)
 
 def start_check_status_scherm():
     thread = threading.Thread(target=check_status_scherm, args=(), daemon=True)
@@ -287,9 +304,10 @@ def start_check_status_scherm():
 
 def lcd_display():
     lcdobj.send_message("ip-address:")
+    lcdobj.LCD_move_cursor(0x40)
+    time.sleep(0.1)
     msg = check_output(
         ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
-    lcdobj.LCD_move_cursor(0x40)
     lcdobj.send_message(msg)
     time.sleep(9)
     lcdobj.clear_LCD()
@@ -359,20 +377,18 @@ if __name__ == '__main__':
         setup_gpio()
         new_par()
         start_chrome_thread()
+        check_vorige_scherm()
+        start_check_status_scherm()
         start_check_par_wind()
-        start_check_params()
         start_realtime_sensoren()
+        start_check_params()
         start_historiek_thread()
         start_lcd_display()
-        start_check_status_scherm()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:
         print ('KeyboardInterrupt exception is caught')
     finally:
-        if schermStatus == True:
-            verander_scherm(False)
-        lcdobj.clear_LCD()
         GPIO.cleanup()
 
 
