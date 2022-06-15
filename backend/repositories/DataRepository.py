@@ -16,6 +16,18 @@ class DataRepository:
         return Database.get_rows(sql)   
 
     @staticmethod
+    def read_historiek_by_device(deviceid):
+        sql = "SELECT volgnummer,CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s"
+        params = [deviceid]
+        return Database.get_rows(sql,params)
+
+    @staticmethod
+    def read_historiek_today_by_device(deviceid):
+        sql = "SELECT volgnummer, CAST(CAST(datum AS time) AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s and DATE(datum) = CURDATE()"
+        params = [deviceid]
+        return Database.get_rows(sql,params)
+
+    @staticmethod
     def insert_into_historiek(waarde,commentaar,deviceid,actieid):
         sql = "INSERT INTO historiek(waarde,commentaar,deviceid,actieid) VALUES(%s,%s,%s,%s)"
         params = [waarde,commentaar,deviceid,actieid]

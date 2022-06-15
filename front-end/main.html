@@ -16,6 +16,7 @@
 
     <script src="script/datahandler.js"></script>
     <script src="script/app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 
     <link rel="stylesheet" href="style/normalize.css" />
     <link rel="stylesheet" href="style/screen.css" />
@@ -50,7 +51,7 @@
           <div class="o-section">
             <div class="o-layout__item">
               <div class="js-sensors">
-                <h2>Sensoren:</h2>
+                <h2>Weersomstandigheden:</h2>
                 <p>Wind: "loading"</p>
                 <p>Licht: "loading"</p>
                 <p>Temp: "loading"</p>
@@ -80,7 +81,15 @@
           <div class="o-section">
             <div class="o-layout__item">
               <h2>Historiek:</h2>
-              <ul class="js-historiek o-list"></ul>
+              <label for="graphs">Kies een weersomstand:</label>
+              <select class="js-dropdown" name="graphs" id="graphs">
+                <option value="3">temperatuur</option>
+                <option value="2">lichtsterkte</option>
+                <option value="1">Windsterkte</option>
+              </select>
+              <div>
+                <div id="chart" class="js-chart"></div>
+              </div>
             </div>
           </div>
         </div>

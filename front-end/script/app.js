@@ -3,35 +3,60 @@
 //#region ***  DOM references                           ***********
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`${lanIP}`);
-let htmlsensor, htmlhistoriek, htmlform, htmlzonbtn, htmlparameters;
+let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown;
+//#endregion
+//#region others
+const showTempChartFirst = function (labels, data) {
+  var options = {
+    chart: {
+      id: "TempChart",
+      type: "line",
+    },
+    stroke: {
+      curve: "smooth",
+      width: 2.5,
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: "Celsius:",
+        data: data,
+      },
+    ],
+    labels: labels,
+    noData: {
+      text: "Loading...",
+    },
+  };
+  let chart = new ApexCharts(document.querySelector(".js-chart"), options);
+  chart.render();
+};
+const UpdateChart = function (labels, data, meeteenheid) {
+  let chart = new ApexCharts(document.querySelector(".js-chart"), options);
+  chart.updateSeries([
+    {
+      name: meeteenheid,
+      data: data,
+    },
+  ]);
+  chart.render();
+};
 //#endregion
 
 //#region ***  Callback-Visualisation - show___         ***********
-const showHistoriek = function (jsonObject) {
-  let html = "";
-  let type;
-  let waarde;
-  for (const meting of jsonObject.historiek) {
-    if (meting.deviceid == 1) {
-      type = "windsterkte";
-      waarde = meting.waarde + " m/s";
-    } else if (meting.deviceid == 2) {
-      type = "lichtsterkte";
-      waarde = meting.waarde + " lux";
-    } else if (meting.deviceid == 3) {
-      type = "temperatuur";
-      waarde = meting.waarde + " C°";
-    } else if (meting.deviceid == 4) {
-      type = "zonnescherm";
-      if (meting.waarde == 1) {
-        waarde = "gaat open";
-      } else if (meting.waarde == 0) {
-        waarde = "gaat dicht";
-      }
-    }
-    html += `<li>${meting.datum}    ${type}:${waarde} </li>`;
-    htmlhistoriek.innerHTML = html;
+
+const ShowTempChart = function (jsonObject) {
+  console.log(jsonObject);
+
+  let converted_labels = [];
+  let converted_data = [];
+  for (const meting of jsonObject.historiek_device) {
+    converted_labels.push(meting.datum);
+    converted_data.push(meting.waarde);
   }
+  drawTempChart(converted_labels, converted_data);
 };
 
 const showRealtime = function (jsonObject) {
@@ -139,8 +164,19 @@ const callbackUpdateForms = function () {
 //#endregion
 
 //#region ***  Data Access - get___                     ***********
-const getHistoriek = function () {
-  handleData(`http://${lanIP}/api/v1/historiek/`, showHistoriek);
+const getHistoriekWind = function () {
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/1/`, ShowTempChart);
+};
+
+const getHistoriekLicht = function () {
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/2/`, ShowTempChart);
+};
+
+const getHistoriekTemp = function () {
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowTempChart);
+};
+const getHistoriekTempFirst = function () {
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, showTempChartFirst);
 };
 
 const getParametersZon = function () {
@@ -164,7 +200,7 @@ const listenToSocketHistoriek = function () {
 
   socket.on("B2F_new_historiek", function () {
     console.log("new historiek");
-    getHistoriek();
+    getHistoriekTemp();
   });
 
   socket.on("B2F_new_scherm", function (jsonObject) {
@@ -203,9 +239,23 @@ const listenToForm = function () {
     handleData(`http://${lanIP}/api/v1/device/`, callbackUpdateForms, null, "PUT", jsonObject);
   });
 };
-const listenToButtonScherm = function () {
+const listenToUI = function () {
   htmlzonbtn.addEventListener("click", function () {
     socket.emit("F2B_switch_scherm");
+  });
+  htmldropdown.addEventListener("change", function () {
+    console.log(htmldropdown.value);
+    switch (htmldropdown.value) {
+      case "1":
+        getHistoriekWind();
+        break;
+      case "2":
+        getHistoriekLicht();
+        break;
+      case "3":
+        getHistoriekTemp();
+        break;
+    }
   });
 };
 //#endregion
@@ -213,15 +263,16 @@ const listenToButtonScherm = function () {
 //#region ***  Init / DOMContentLoaded                  ***********
 const init = function () {
   htmlsensor = document.querySelector(".js-sensors");
-  htmlhistoriek = document.querySelector(".js-historiek");
+  htmlhistoriekTemp = document.querySelector(".js-chart");
   htmlform = document.querySelector(".js-form");
   htmlzonbtn = document.querySelector(".js-scherm-button");
   htmlparameters = document.querySelector(".js-parameters");
+  htmldropdown = document.querySelector(".js-dropdown");
   console.info("DOM geladen");
-  if (htmlhistoriek) {
-    getHistoriek();
+  if (htmlhistoriekTemp) {
+    getHistoriekTempFirst();
     listenToSocketHistoriek();
-    listenToButtonScherm();
+    listenToUI();
   } else if (htmlparameters) {
     getParametersZon();
     listenToSocketPar();

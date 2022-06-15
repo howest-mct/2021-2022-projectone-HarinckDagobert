@@ -46,7 +46,7 @@ def setup_gpio():
 def omzettemp(value):
     try:
         untc = (value/1023) * 3.3
-        temp = untc*(-33.333) + 75.33
+        temp = untc*(-32.333) + 75.33
         return (temp)
     except:
         return 0
@@ -131,14 +131,23 @@ def get_historiek():
         else:
             return jsonify(message="error"), 404
 
-@app.route(endpoint + '/historiek/<date>/', methods=['GET'])
-def get_historiek_by_date(date):
+@app.route(endpoint + '/historiek/device/<device_id>/', methods=['GET'])
+def get_historiek_by_device(device_id):
     if request.method == 'GET':
-        data=DataRepository.read_historiek_by_date(date)
+        data=DataRepository.read_historiek_by_device(device_id)
         if data is not None:
-            return jsonify(historiek_date=data), 200
+            return jsonify(historiek_device=data), 200
         else:
-            return jsonify(message="error"), 404    
+            return jsonify(message="error"), 404
+
+@app.route(endpoint + '/historiek/today/device/<device_id>/', methods=['GET'])
+def get_historiek_by_day_and_device(device_id):
+    if request.method == 'GET':
+        data=DataRepository.read_historiek_today_by_device(device_id)
+        if data is not None:
+            return jsonify(historiek_device=data), 200
+        else:
+            return jsonify(message="error"), 404  
 
 @app.route(endpoint + '/device/', methods=['GET','PUT'])
 def maxmin_device():
@@ -213,31 +222,33 @@ def start_realtime_sensoren():
 
 def check_params():
     while True:
+        global par
+        global sens
+        parlicht = int(par[1]["waarde"])
+        partemp = int(par[2]["waarde"])
+        pardagen = par[3]["waarde"]
+        senslicht_first = sens[1]
+        senstemp_first = sens[0]
+        time.sleep(10)
+        sens2 = lees_sensors()
+        senslicht_sec = sens2[1]
+        senstemp_sec = sens2[0]
+        av_licht = mean([senslicht_first,senslicht_sec])
+        av_temp = mean([senstemp_first,senstemp_sec])
+        dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
         global schermStatus
         global schermOverride
         global schermOverride_Wind
-        global par
-        global sens
         if schermOverride == False and schermOverride_Wind == False:
-            parlicht = int(par[1]["waarde"])
-            partemp = int(par[2]["waarde"])
-            pardagen = par[3]["waarde"]
-            senslicht_first = sens[1]
-            senstemp_first = sens[0]
-            time.sleep(10)
-            sens2 = lees_sensors()
-            senslicht_sec = sens2[1]
-            senstemp_sec = sens2[0]
-            av_licht = mean([senslicht_first,senslicht_sec])
-            av_temp = mean([senstemp_first,senstemp_sec])
-            dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
             if av_licht > parlicht and av_temp > partemp and dag in pardagen:
                 schermStatus = True
             else:
-                schermStatus = False    
+                schermStatus = False 
         else:
             schermOverride = False
             time.sleep(120)
+        
+        
 
 def start_check_params():
     thread = threading.Thread(target=check_params, args=(), daemon=True)
