@@ -3,7 +3,7 @@
 //#region ***  DOM references                           ***********
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`${lanIP}`);
-let htmlhistoriekTemp, htmlform, htmlzonbtn, htmlzonslider, htmlparameters, htmldropdown, htmlformbtn, chart, meeteenheid;
+let htmlhistoriekTemp, htmlform, htmlzonbtn, htmlzonslider, htmlparameters, htmldropdown, htmlformbtn, chart, gekozensensor;
 //#endregion
 //#region others
 const DrawTempChartFirst = function (labels, data) {
@@ -75,11 +75,33 @@ const DrawTempChartFirst = function (labels, data) {
   chart = new ApexCharts(document.querySelector(".js-chart"), options);
   chart.render();
 };
-const UpdateChart = function (labels, data) {
+const UpdateChartWind = function (labels, data) {
   chart.updateOptions({
     series: [
       {
-        name: meeteenheid,
+        name: "m/s",
+        data: data,
+      },
+    ],
+    labels: labels,
+    yaxis: {
+      min: 0,
+      max: 20,
+      tickAmount: 4,
+      title: {
+        text: "m/s",
+        style: {
+          cssClass: "c-chart-labels",
+        },
+      },
+    },
+  });
+};
+const UpdateChartTemp = function (labels, data) {
+  chart.updateOptions({
+    series: [
+      {
+        name: "celsius",
         data: data,
       },
     ],
@@ -89,7 +111,29 @@ const UpdateChart = function (labels, data) {
       max: 35,
       tickAmount: 5,
       title: {
-        text: meeteenheid,
+        text: "celsius",
+        style: {
+          cssClass: "c-chart-labels",
+        },
+      },
+    },
+  });
+};
+const UpdateChartLicht = function (labels, data) {
+  chart.updateOptions({
+    series: [
+      {
+        name: "lux",
+        data: data,
+      },
+    ],
+    labels: labels,
+    yaxis: {
+      min: 500,
+      max: 5000,
+      tickAmount: 9,
+      title: {
+        text: "lux",
         style: {
           cssClass: "c-chart-labels",
         },
@@ -119,15 +163,15 @@ const ShowUpdatedChart = function (jsonObject) {
     converted_labels.push(meting.datum);
     converted_data.push(meting.waarde);
   }
-  switch (htmldropdown.value) {
-    case "1":
-      UpdateChart(converted_labels, converted_data);
+  switch (gekozensensor) {
+    case 1:
+      UpdateChartWind(converted_labels, converted_data);
       break;
-    case "2":
-      UpdateChart(converted_labels, converted_data);
+    case 2:
+      UpdateChartLicht(converted_labels, converted_data);
       break;
-    case "3":
-      UpdateChart(converted_labels, converted_data);
+    case 3:
+      UpdateChartTemp(converted_labels, converted_data);
       break;
   }
 };
@@ -205,19 +249,19 @@ const callbackUpdateForms = function () {
 
 //#region ***  Data Access - get___                     ***********
 const getHistoriekWind = function () {
-  meeteenheid = "m/s";
+  gekozensensor = 1;
   document.querySelector(".js-dropdowntitel").innerHTML = "Windsterkte van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/1/`, ShowUpdatedChart);
 };
 
 const getHistoriekLicht = function () {
-  meeteenheid = "Lux";
+  gekozensensor = 2;
   document.querySelector(".js-dropdowntitel").innerHTML = "Lichtsterkte van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/2/`, ShowUpdatedChart);
 };
 
 const getHistoriekTemp = function () {
-  meeteenheid = "Celsius";
+  gekozensensor = 3;
   document.querySelector(".js-dropdowntitel").innerHTML = "Temperatuur van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowUpdatedChart);
 };
