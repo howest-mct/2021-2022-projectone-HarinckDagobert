@@ -93,50 +93,6 @@ const showKnopstate = function () {
   console.log("scherm verandered");
 };
 
-const showParameters = function (jsonObject) {
-  let html = "";
-  let type;
-  let waarde;
-  for (const sensor of jsonObject.maxminWaarde) {
-    if (sensor.parid == 1) {
-      type = "maximum windsterkte";
-      waarde = sensor.waarde + " m/s";
-    } else if (sensor.parid == 2) {
-      type = "minimum lichtsterkte";
-      waarde = sensor.waarde + " lux";
-    } else if (sensor.parid == 3) {
-      type = "minimum temperatuur";
-      waarde = sensor.waarde + " C°";
-    } else if (sensor.parid == 4) {
-      type = "weekdagen";
-      waarde = "";
-      if (sensor.waarde.includes("1")) {
-        waarde += "maandag ";
-      }
-      if (sensor.waarde.includes("2")) {
-        waarde += "dinsdag ";
-      }
-      if (sensor.waarde.includes("3")) {
-        waarde += "woensdag ";
-      }
-      if (sensor.waarde.includes("4")) {
-        waarde += "donderdag ";
-      }
-      if (sensor.waarde.includes("5")) {
-        waarde += "vrijdag ";
-      }
-      if (sensor.waarde.includes("6")) {
-        waarde += "zaterdag ";
-      }
-      if (sensor.waarde.includes("0")) {
-        waarde += "zondag ";
-      }
-    }
-    html += `<li>${type}: ${waarde}</li>`;
-  }
-  htmlparameters.innerHTML = html;
-};
-
 const showParametersForm = function (jsonObject) {
   for (const sensor of jsonObject.maxminWaarde) {
     if (sensor.parid == 1) {
@@ -194,24 +150,23 @@ const callbackUpdateForms = function () {
 //#region ***  Data Access - get___                     ***********
 const getHistoriekWind = function () {
   meeteenheid = "m/s";
+  document.querySelector(".js-dropdowntitel").innerHTML = "Windsterkte van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/1/`, ShowUpdatedChart);
 };
 
 const getHistoriekLicht = function () {
   meeteenheid = "Lux";
+  document.querySelector(".js-dropdowntitel").innerHTML = "Lichtsterkte van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/2/`, ShowUpdatedChart);
 };
 
 const getHistoriekTemp = function () {
   meeteenheid = "Celsius";
+  document.querySelector(".js-dropdowntitel").innerHTML = "Temperatuur van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowUpdatedChart);
 };
 const getHistoriekTempFirst = function () {
   handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowTempChart);
-};
-
-const getParametersZon = function () {
-  handleData(`http://${lanIP}/api/v1/device/`, showParameters);
 };
 
 const getParametersForm = function () {
@@ -253,11 +208,6 @@ const listenToSocketHistoriek = function () {
     } else if (jsonObject.status == false) {
       btn.classList.add("c-scherm-button-off");
     }
-  });
-};
-const listenToSocketPar = function () {
-  socket.on("B2F_new_parameters", function () {
-    getParametersZon();
   });
 };
 const listenToForm = function () {
@@ -318,7 +268,7 @@ const init = function () {
   console.info("DOM geladen");
   if (htmlhistoriekTemp) {
     getHistoriekTempFirst();
-    listenToSocketHistoriek();
+    // listenToSocketHistoriek();
     listenToUI();
   } else if (htmlformbtn) {
     getParametersForm();

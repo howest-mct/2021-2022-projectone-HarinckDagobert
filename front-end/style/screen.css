@@ -13,7 +13,7 @@
 */
 
 html {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.5;
     font-family: "proxima-nova", arial, sans-serif;
     color: #2D3033;
@@ -64,14 +64,14 @@ img {
 */
 
 h1 {
-    font-size: 25px;
+    font-size: 28px;
     line-height: 40px;
     margin: 0 0 8px;
     font-weight: 700;
 }
 
 h2 {
-    font-size: 18px;
+    font-size: 21px;
     line-height: 24px;
     margin: 0 0 8px;
     font-weight: 700;
@@ -468,6 +468,43 @@ a:focus {
         line-height: 24px;
         margin: 0 0 8px;
         font-weight: 700;
+    }
+    .c-sensor-item{
+        display: inline-block;
+        text-decoration: none;
+        width:220px;
+        padding: 16px;
+        border-radius: 4px;
+        background: #AED8F9;
+    }
+    .c-sensor-list{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+    }
+
+
+    @media (min-width: 835px) {
+        .c-sensor-list {
+            flex-direction: row;
+            gap:26px;
+            
+        }
+        .c-sensor-item {
+            width: 180px;
+        }
+    }
+       
+    @media (min-width: 1200px) {
+        .c-sensor-list {
+            gap: 82px;
+            
+        }
+        .c-sensor-item {
+            width: 220px;
+        }
     }
 /*
     Component: scherm-button

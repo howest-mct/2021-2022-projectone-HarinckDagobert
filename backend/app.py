@@ -1,6 +1,4 @@
 import time
-from math import log
-from statistics import mean
 from RPi import GPIO
 from helpers.klasseknop import Button
 from helpers.spiclass import SpiClass
@@ -234,8 +232,8 @@ def check_params():
         sens2 = lees_sensors()
         senslicht_sec = sens2[1]
         senstemp_sec = sens2[0]
-        av_licht = mean([senslicht_first,senslicht_sec])
-        av_temp = mean([senstemp_first,senstemp_sec])
+        av_licht = (senslicht_first + senslicht_sec) / 2
+        av_temp =(senstemp_first + senstemp_sec) / 2
         dag = check_output(['date', '+"%w"']).decode('utf-8').replace('"','').strip()
         global schermStatus
         global schermOverride

@@ -50,13 +50,24 @@
         <div class="o-layout o-layout--column">
           <div class="o-section">
             <div class="o-layout__item">
-              <div class="js-sensors">
-                <h2>Weersomstandigheden:</h2>
-                <p>Wind: "loading"</p>
-                <p>Licht: "loading"</p>
-                <p>Temp: "loading"</p>
-                <p>Scherm: "loading"</p>
-              </div>
+              <ul class="js-sensors c-sensor-list o-list">
+                <li class="c-sensor-item">
+                  <h2 class="c-sensor-naam">Windsterkte:</h2>
+                  <p class="c-sensor-waarde">"loading"</p>
+                </li>
+                <li class="c-sensor-item">
+                  <h2 class="c-sensor-naam">Lichtsterkte:</h2>
+                  <p class="c-sensor-waarde">"loading"</p>
+                </li>
+                <li class="c-sensor-item">
+                  <h2 class="c-sensor-naam">Temperatuur:</h2>
+                  <p class="c-sensor-waarde">"loading"</p>
+                </li>
+                <li class="c-sensor-item">
+                  <h2 class="c-sensor-naam">Status van scherm:</h2>
+                  <p class="c-sensor-waarde">"loading"</p>
+                </li>
+              </ul>
             </div>
           </div>
           <div class="o-section">
@@ -80,7 +91,7 @@
           </div>
           <div class="o-section">
             <div class="o-layout__item">
-              <h2>Historiek:</h2>
+              <h2 class="js-dropdowntitel">Temperatuur van vandaag:</h2>
               <label for="graphs">Kies een weersomstand:</label>
               <select class="js-dropdown" name="graphs" id="graphs">
                 <option value="3">temperatuur</option>
