@@ -3,7 +3,7 @@
 //#region ***  DOM references                           ***********
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`${lanIP}`);
-let htmlsensor, htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown, htmlformbtn, chart, meeteenheid;
+let htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown, htmlformbtn, chart, meeteenheid;
 //#endregion
 //#region others
 const DrawTempChartFirst = function (labels, data) {
@@ -76,21 +76,19 @@ const ShowUpdatedChart = function (jsonObject) {
 
 const showRealtime = function (jsonObject) {
   const arrsensors = jsonObject.sensoren;
+  const btn = document.querySelector(".js-scherm-button");
   let waardeScherm;
   if (arrsensors.scherm == 1) {
     waardeScherm = "open";
+    btn.checked = true;
   } else if (arrsensors.scherm == 0) {
     waardeScherm = "dicht";
+    btn.checked = false;
   }
-  htmlsensor.innerHTML = `<h2>Weersomstandigheden:</h2>
-              <p>Wind:  ${arrsensors.wind} m/s</p>
-              <p>Licht: ${arrsensors.licht} Lux</p>
-              <p>Temp: ${arrsensors.temp} C°</p>
-              <p>Scherm: ${waardeScherm}</p>`;
-};
-
-const showKnopstate = function () {
-  console.log("scherm verandered");
+  document.querySelector(".js-sensor-wind").innerHTML = `${arrsensors.wind} m/s`;
+  document.querySelector(".js-sensor-licht").innerHTML = `${arrsensors.licht}`;
+  document.querySelector(".js-sensor-temp").innerHTML = `${arrsensors.temp} C°`;
+  document.querySelector(".js-sensor-scherm").innerHTML = `${waardeScherm}`;
 };
 
 const showParametersForm = function (jsonObject) {
@@ -198,17 +196,6 @@ const listenToSocketHistoriek = function () {
         break;
     }
   });
-
-  socket.on("B2F_new_scherm", function (jsonObject) {
-    const btn = document.querySelector(".js-scherm-button");
-    btn.classList.remove("c-scherm-button-off");
-    btn.classList.remove("c-scherm-button-on");
-    if (jsonObject.status == true) {
-      btn.classList.add("c-scherm-button-on");
-    } else if (jsonObject.status == false) {
-      btn.classList.add("c-scherm-button-off");
-    }
-  });
 };
 const listenToForm = function () {
   const button = document.querySelector(".js-form-button");
@@ -258,7 +245,6 @@ const listenToUIforms = function () {
 
 //#region ***  Init / DOMContentLoaded                  ***********
 const init = function () {
-  htmlsensor = document.querySelector(".js-sensors");
   htmlhistoriekTemp = document.querySelector(".js-chart");
   htmlform = document.querySelector(".js-form");
   htmlzonbtn = document.querySelector(".js-scherm-button");
@@ -268,7 +254,7 @@ const init = function () {
   console.info("DOM geladen");
   if (htmlhistoriekTemp) {
     getHistoriekTempFirst();
-    // listenToSocketHistoriek();
+    listenToSocketHistoriek();
     listenToUI();
   } else if (htmlformbtn) {
     getParametersForm();

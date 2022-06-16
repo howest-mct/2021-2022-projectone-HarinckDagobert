@@ -87,17 +87,23 @@ def lees_knop(pin):
         schermStatus = not schermStatus
         print(schermStatus)
 
+def send_realtime():
+    global schermStatus
+    global sens
+    senswind = sens[2]
+    senslicht = sens[1]
+    senstemp = sens[0] 
+    socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':senstemp,'licht':senslicht,'wind':senswind, 'scherm':schermStatus}}, broadcast=True)
+
 def verander_scherm(new_status):
     if new_status == True:
         print("zonnescherm opent")
-        socketio.emit('B2F_new_scherm', {'status': schermStatus},broadcast=True)
+        send_realtime()
         steppobj.links()
     elif new_status == False:
         print("zonnescherm sluit")
-        socketio.emit('B2F_new_scherm', {'status': schermStatus},broadcast=True)
+        send_realtime()
         steppobj.rechts()
-
-
 # Code voor Flask
 
 app = Flask(__name__)
@@ -171,8 +177,7 @@ def maxmin_device():
 
 @socketio.on('connect')
 def initial_connection():
-    global schermStatus
-    socketio.emit('B2F_new_scherm', {'status': schermStatus})
+    send_realtime()
 
 @socketio.on('F2B_switch_scherm')
 def receive_switch_scherm():
@@ -212,8 +217,14 @@ def realtime_sensoren():
         senswind = sens[2]
         senslicht = sens[1]
         senstemp = sens[0]        
-        socketio.emit('B2F_status_sensoren', {'sensoren': {'temp':senstemp,'licht':senslicht,'wind':senswind, 'scherm':schermStatus}}, broadcast=True)
-        time.sleep(2.1)
+        time.sleep(1)
+        sens2 = lees_sensors()
+        senswind_sec = sens[2]
+        senslicht_sec = sens2[1]
+        senstemp_sec = sens2[0]
+        if senswind != senswind_sec or senslicht != senswind_sec or senstemp != senstemp_sec:
+            send_realtime()
+        
 
 def start_realtime_sensoren():
     thread = threading.Thread(target=realtime_sensoren, args=(), daemon=True)
