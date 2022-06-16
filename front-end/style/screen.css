@@ -64,7 +64,7 @@ img {
 */
 
 h1 {
-    font-size: 28px;
+    font-size: 43px;
     line-height: 40px;
     margin: 0 0 8px;
     font-weight: 700;
@@ -167,6 +167,17 @@ a:focus {
     padding: 24px 24px 0;
     display: flow-root;
 }
+
+.o-row-body {
+    padding-top: 48px;
+}
+
+/* @media (min-width: 768px) {
+    .o-row-body {
+            padding-left: 48px;
+            padding-right: 48px;
+        }
+} */
 /* color modifiers */
 
 .o-row--primary-x-dark {
@@ -595,16 +606,87 @@ button om scherm te bedienen
 }
 
 /*
-    Component: Nav
+    Component: dropdown
     ---
-    Main navigation of the site
+    dropdown menu for multiple graphs
 */
 
-.c-nav {
-    font-size: 14px;
-    line-height: 24px;
+
+.c-dropdown-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.c-dropdown-titel-wrapper{
+    display: flex;
+    width: none;
+    align-items: center;
+}
+.c-dropdown-titel {
+    font-size: 21px;
+    margin: auto;
 }
 
+.c-dropdown-left{
+    visibility: hidden
+}
+.c-dropdown-menu{
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: "proxima-nova", arial, sans-serif;
+    color: #F2F5F7;
+    width: 130px;
+    height: 32px;
+    outline: none;
+    background-color: #004880;
+    font-weight: 400;
+    border-radius: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.c-dropdown-chart{
+    display: flex;
+    justify-content: center;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+@media (min-width: 835px) {
+    .c-dropdown-head {
+            display: flex;
+            justify-content: space-around;
+        }
+    
+    .c-dropdown-titel {
+        font-size: 32px;
+        }
+    .c-dropdown-titel-wrapper {
+        display: flex;
+        width: 400px;
+    }
+    .c-dropdown-left {
+        display: inline-block;
+        width: 125px;
+        }
+}
+
+@media (min-width: 1200px) {
+        .c-dropdown-titel-wrapper {
+            display: flex;
+            width: 510px;
+        }
+        .c-dropdown-titel {
+            font-size: 42px;
+        }
+}
+/* chart
+*/
+.c-chart-labels{
+    font-size: 14px
+    line-height: 1.5;
+    font-family: "proxima-nova", arial, sans-serif;
+    color: #2D3033;
+    font-weight: 300;
+}
 .c-nav__link {
     text-decoration: none;
     font-weight: 600;

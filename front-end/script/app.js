@@ -3,7 +3,7 @@
 //#region ***  DOM references                           ***********
 const lanIP = `${window.location.hostname}:5000`;
 const socket = io(`${lanIP}`);
-let htmlhistoriekTemp, htmlform, htmlzonbtn, htmlparameters, htmldropdown, htmlformbtn, chart, meeteenheid;
+let htmlhistoriekTemp, htmlform, htmlzonbtn, htmlzonslider, htmlparameters, htmldropdown, htmlformbtn, chart, meeteenheid;
 //#endregion
 //#region others
 const DrawTempChartFirst = function (labels, data) {
@@ -34,6 +34,43 @@ const DrawTempChartFirst = function (labels, data) {
     noData: {
       text: "Loading...",
     },
+    xaxis: {
+      type: "datetime",
+      labels: {
+        show: true,
+        rotate: -90,
+        rotateAlways: false,
+        hideOverlappingLabels: true,
+        style: {
+          cssClass: "c-chart-labels",
+        },
+        datetimeUTC: false,
+      },
+    },
+    yaxis: {
+      type: "numeric",
+      min: 15,
+      max: 35,
+      tickAmount: 4,
+      labels: {
+        show: true,
+        // rotate: -90,
+        // rotateAlways: false,
+        hideOverlappingLabels: true,
+        style: {
+          cssClass: "c-chart-labels",
+        },
+      },
+      title: {
+        text: "celsius",
+        style: {
+          cssClass: "c-chart-labels",
+        },
+      },
+    },
+    chart: {
+      width: "100%",
+    },
   };
   chart = new ApexCharts(document.querySelector(".js-chart"), options);
   chart.render();
@@ -47,6 +84,17 @@ const UpdateChart = function (labels, data) {
       },
     ],
     labels: labels,
+    yaxis: {
+      min: 10,
+      max: 35,
+      tickAmount: 5,
+      title: {
+        text: meeteenheid,
+        style: {
+          cssClass: "c-chart-labels",
+        },
+      },
+    },
   });
 };
 //#endregion
@@ -71,12 +119,22 @@ const ShowUpdatedChart = function (jsonObject) {
     converted_labels.push(meting.datum);
     converted_data.push(meting.waarde);
   }
-  UpdateChart(converted_labels, converted_data);
+  switch (htmldropdown.value) {
+    case "1":
+      UpdateChart(converted_labels, converted_data);
+      break;
+    case "2":
+      UpdateChart(converted_labels, converted_data);
+      break;
+    case "3":
+      UpdateChart(converted_labels, converted_data);
+      break;
+  }
 };
 
 const showRealtime = function (jsonObject) {
   const arrsensors = jsonObject.sensoren;
-  const btn = document.querySelector(".js-scherm-button");
+  const btn = htmlzonslider;
   let waardeScherm;
   if (arrsensors.scherm == 1) {
     waardeScherm = "open";
@@ -248,6 +306,7 @@ const init = function () {
   htmlhistoriekTemp = document.querySelector(".js-chart");
   htmlform = document.querySelector(".js-form");
   htmlzonbtn = document.querySelector(".js-scherm-button");
+  htmlzonslider = document.querySelector(".js-scherm-slider");
   htmlparameters = document.querySelector(".js-parameters");
   htmldropdown = document.querySelector(".js-dropdown");
   htmlformbtn = document.querySelector(".js-default-button");

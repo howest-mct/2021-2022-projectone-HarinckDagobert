@@ -312,33 +312,29 @@ def start_check_status_scherm():
     thread.start()
 
 def lcd_display():
-    time.sleep(5)
-    for i in range(20):
-        time.sleep(0.00001)
-        lcdobj.send_message("ip-address:")
-        lcdobj.LCD_move_cursor(0x40)
-        time.sleep(0.00001)
-        msg = check_output(
-            ['hostname', '--all-ip-addresses']).decode('utf-8')[0:15]
-        lcdobj.send_message(msg)
-        time.sleep(1)
-        lcdobj.clear_LCD()
     while True:
-        global sens
-        time.sleep(1)
-        lcdobj.clear_LCD()
-        senswind = sens[2]
-        senslicht = sens[1]
-        senstemp = sens[0]
-        lcdobj.LCD_move_cursor(0x00)
-        time.sleep(0.00001)
-        lcdobj.send_message(f"W:{senswind}ms")
-        lcdobj.LCD_move_cursor(0x40)
-        time.sleep(0.00001)
-        lcdobj.send_message(f"L:{senslicht}L")
-        lcdobj.LCD_move_cursor(0x48)
-        time.sleep(0.00001)
-        lcdobj.send_message(f"T:{senstemp}C")
+        for i in range(10):
+            lcdobj.LCD_move_cursor(0x00)
+            lcdobj.send_message("ip-address:")
+            lcdobj.LCD_move_cursor(0x40)
+            msg = check_output(
+                ['hostname', '--all-ip-addresses']).decode('utf-8')[0:14]
+            lcdobj.send_message(msg)
+            time.sleep(1)
+            lcdobj.clear_LCD()
+        for i in range(10):
+            global sens
+            senswind = sens[2]
+            senslicht = sens[1]
+            senstemp = sens[0]
+            lcdobj.LCD_move_cursor(0x00)
+            lcdobj.send_message(f"W:{senswind}ms")
+            lcdobj.LCD_move_cursor(0x40)
+            lcdobj.send_message(f"L:{senslicht}L")
+            lcdobj.LCD_move_cursor(0x48)
+            lcdobj.send_message(f"T:{senstemp}C")
+            time.sleep(1)
+            lcdobj.clear_LCD()
 
 
 def start_lcd_display():

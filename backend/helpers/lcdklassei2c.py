@@ -22,6 +22,7 @@ class lcd:
         GPIO.output(self.__RS, GPIO.LOW)
         self.__i2c.write_byte(0x20, value)
         GPIO.output(self.__E, GPIO.LOW)
+        time.sleep(0.000000000000001)
         GPIO.output(self.__E, GPIO.HIGH)
 
     def reset_LCD(self):
@@ -53,6 +54,7 @@ class lcd:
         GPIO.output(self.__RS, GPIO.HIGH)
         self.__i2c.write_byte(0x20, value)
         GPIO.output(self.__E, GPIO.LOW)
+        # time.sleep(0.000000000000001)
         GPIO.output(self.__E, GPIO.HIGH)
         # value = byte, loop through bits (mask) and set data pins
 

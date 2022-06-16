@@ -45,10 +45,10 @@
         </div>
       </div>
     </header>
-    <section class="o-row">
+    <section class="o-row o-row-body">
       <div class="o-container">
         <div class="o-layout o-layout--column">
-          <div class="o-section">
+          <div class="o-section o-section--lg">
             <div class="o-layout__item">
               <ul class="js-sensors c-sensor-list o-list">
                 <li class="c-sensor-item">
@@ -67,9 +67,9 @@
                   <h2 class="c-sensor-naam">Status van scherm:</h2>
                   <div class="c-scherm-items">
                     <p class="c-sensor-waarde js-sensor-scherm">"loading"</p>
-                    <div class="c-scherm-button">
+                    <div class="c-scherm-button js-scherm-button">
                       <label class="c-switch">
-                        <input class="js-scherm-button c-switch-input" type="checkbox" />
+                        <input class="js-scherm-slider c-switch-input" type="checkbox" disabled />
                         <span class="c-slider"></span>
                       </label>
                     </div>
@@ -78,17 +78,21 @@
               </ul>
             </div>
           </div>
-          <div class="o-section">
+          <div class="o-section o-section--lg">
             <div class="o-layout__item">
-              <h2 class="js-dropdowntitel">Temperatuur van vandaag:</h2>
-              <label for="graphs">Kies een weersomstand:</label>
-              <select class="js-dropdown" name="graphs" id="graphs">
-                <option value="3">temperatuur</option>
-                <option value="2">lichtsterkte</option>
-                <option value="1">Windsterkte</option>
-              </select>
+              <div class="c-dropdown-head">
+                <div class="c-dropdown-left"></div>
+                <div class="c-dropdown-titel-wrapper">
+                  <h1 class="c-dropdown-titel js-dropdowntitel">Temperatuur van vandaag:</h1>
+                </div>
+                <select class="js-dropdown c-dropdown-menu" name="graphs" id="graphs">
+                  <option value="3">temperatuur</option>
+                  <option value="2">lichtsterkte</option>
+                  <option value="1">windsterkte</option>
+                </select>
+              </div>
               <div>
-                <div id="chart" class="js-chart"></div>
+                <div id="chart" class="js-chart c-dropdown-chart"></div>
               </div>
             </div>
           </div>
