@@ -47,58 +47,56 @@
       <section class="o-row">
         <div class="o-container">
           <form>
-            <div class="o-layout">
-              <div class="o-layout__item">
-                <div class="o-section">
-                  <label class="c-sensor-form-titel" for="waardewind">Maximum windsterkte:</label><br />
-                  <input class="js-form-wind" type="number" id="waardewind" name="waardewind" value="" required /><br />
-                </div>
-                <div class="o-section">
-                  <label class="c-sensor-form-titel" for="waardelicht">Minimum lichtsterkte:</label><br />
-                  <input class="js-form-licht" type="number" id="waardelicht" name="waardelicht" value="" required /><br />
-                </div>
-                <div class="o-section">
-                  <label class="c-sensor-form-titel" for="waardetemp">Minimum temperatuur:</label><br />
-                  <input class="js-form-temp" type="number" id="waardetemp" name="waardetemp" value="" required /><br />
-                </div>
-                <div class="o-section">
-                  <h2>Weekdagen:</h2>
-                  <ul class="o-list c-dag__list">
-                    <li class="c-dag__item">
-                      <input class="js-form-maandag js-form-dag c-form-dag" type="checkbox" id="maandag" name="weekdagen" value="1" />
-                      <label for="maandag">maandag</label><br />
-                    </li>
-                    <li class="c-dag__item">
-                      <input class="js-form-dinsdag js-form-dag c-form-dag" type="checkbox" id="dinsdag" name="weekdagen" value="2" />
-                      <label for="dinsdag">dinsdag</label><br />
-                    </li>
-                    <li class="c-dag__item">
-                      <input class="js-form-woensdag js-form-dag c-form-dag" type="checkbox" id="woensdag" name="weekdagen" value="3" />
-                      <label for="woensdag">woensdag</label><br />
-                    </li>
-                    <li class="c-dag__item">
-                      <input class="js-form-donderdag js-form-dag c-form-dag" type="checkbox" id="donderdag" name="weekdagen" value="4" />
-                      <label for="donderdag">donderdag</label><br />
-                    </li>
-                    <li class="c-dag__item">
-                      <input class="js-form-vrijdag js-form-dag c-form-dag" type="checkbox" id="vrijdag" name="weekdagen" value="5" />
-                      <label for="vrijdag">vrijdag</label><br />
-                    </li>
-                    <li class="c-dag__item">
-                      <input class="js-form-zaterdag js-form-dag c-form-dag" type="checkbox" id="zaterdag" name="weekdagen" value="6" />
-                      <label for="zaterdag">zaterdag</label><br />
-                    </li>
-                    <li class="c-dag__item">
-                      <input class="js-form-zondag js-form-dag c-form-dag" type="checkbox" id="zondag" name="weekdagen" value="0" />
-                      <label for="zondag">zondag</label><br />
-                    </li>
-                  </ul>
-                </div>
-                <div class="o-section">
-                  <div class="c-form-button js-default-button">
-                    <div class="c-button">
-                      <p class="c-button-tekst">default waarden</p>
-                    </div>
+            <div class="o-layout o-layout--justify-center">
+              <div class="o-section">
+                <label class="c-sensor-form-titel" for="waardewind">Maximum windsterkte:</label><br />
+                <input class="js-form-wind" type="number" id="waardewind" name="waardewind" value="" required /><br />
+              </div>
+              <div class="o-section">
+                <label class="c-sensor-form-titel" for="waardelicht">Minimum lichtsterkte:</label><br />
+                <input class="js-form-licht" type="number" id="waardelicht" name="waardelicht" value="" required /><br />
+              </div>
+              <div class="o-section">
+                <label class="c-sensor-form-titel" for="waardetemp">Minimum temperatuur:</label><br />
+                <input class="js-form-temp" type="number" id="waardetemp" name="waardetemp" value="" required /><br />
+              </div>
+              <div class="o-section c-temp-FA2">
+                <h2>Weekdagen:</h2>
+                <ul class="o-list c-dag__list">
+                  <li class="c-dag__item">
+                    <input class="js-form-maandag js-form-dag c-form-dag" type="checkbox" id="maandag" name="weekdagen" value="1" />
+                    <label for="maandag">maandag</label><br />
+                  </li>
+                  <li class="c-dag__item">
+                    <input class="js-form-dinsdag js-form-dag c-form-dag" type="checkbox" id="dinsdag" name="weekdagen" value="2" />
+                    <label for="dinsdag">dinsdag</label>
+                  </li>
+                  <li class="c-dag__item">
+                    <input class="js-form-woensdag js-form-dag c-form-dag" type="checkbox" id="woensdag" name="weekdagen" value="3" />
+                    <label for="woensdag">woensdag</label><br />
+                  </li>
+                  <li class="c-dag__item">
+                    <input class="js-form-donderdag js-form-dag c-form-dag" type="checkbox" id="donderdag" name="weekdagen" value="4" />
+                    <label for="donderdag">donderdag</label><br />
+                  </li>
+                  <li class="c-dag__item">
+                    <input class="js-form-vrijdag js-form-dag c-form-dag" type="checkbox" id="vrijdag" name="weekdagen" value="5" />
+                    <label for="vrijdag">vrijdag</label><br />
+                  </li>
+                  <li class="c-dag__item">
+                    <input class="js-form-zaterdag js-form-dag c-form-dag" type="checkbox" id="zaterdag" name="weekdagen" value="6" />
+                    <label for="zaterdag">zaterdag</label><br />
+                  </li>
+                  <li class="c-dag__item">
+                    <input class="js-form-zondag js-form-dag c-form-dag" type="checkbox" id="zondag" name="weekdagen" value="0" />
+                    <label for="zondag">zondag</label><br />
+                  </li>
+                </ul>
+              </div>
+              <div class="o-section">
+                <div class="c-form-button js-default-button">
+                  <div class="c-button">
+                    <p class="c-button-tekst">default waarden</p>
                   </div>
                 </div>
               </div>
