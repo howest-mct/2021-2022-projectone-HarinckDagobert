@@ -11,6 +11,7 @@ const DrawTempChartFirst = function (labels, data) {
     chart: {
       id: "TempChart",
       type: "line",
+      width: "130%",
     },
     stroke: {
       curve: "smooth",
@@ -42,7 +43,10 @@ const DrawTempChartFirst = function (labels, data) {
         rotateAlways: false,
         hideOverlappingLabels: true,
         style: {
-          cssClass: "c-chart-labels",
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
         },
         datetimeUTC: false,
       },
@@ -54,22 +58,23 @@ const DrawTempChartFirst = function (labels, data) {
       tickAmount: 4,
       labels: {
         show: true,
-        // rotate: -90,
-        // rotateAlways: false,
         hideOverlappingLabels: true,
         style: {
-          cssClass: "c-chart-labels",
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
         },
       },
       title: {
         text: "celsius",
         style: {
-          cssClass: "c-chart-labels",
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
         },
       },
-    },
-    chart: {
-      width: "100%",
     },
   };
   chart = new ApexCharts(document.querySelector(".js-chart"), options);
@@ -88,10 +93,21 @@ const UpdateChartWind = function (labels, data) {
       min: 0,
       max: 20,
       tickAmount: 4,
+      labels: {
+        style: {
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
+        },
+      },
       title: {
         text: "m/s",
         style: {
-          cssClass: "c-chart-labels",
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
         },
       },
     },
@@ -110,10 +126,21 @@ const UpdateChartTemp = function (labels, data) {
       min: 10,
       max: 35,
       tickAmount: 5,
+      labels: {
+        style: {
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
+        },
+      },
       title: {
         text: "celsius",
         style: {
-          cssClass: "c-chart-labels",
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
         },
       },
     },
@@ -132,10 +159,21 @@ const UpdateChartLicht = function (labels, data) {
       min: 500,
       max: 5000,
       tickAmount: 9,
+      labels: {
+        style: {
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
+        },
+      },
       title: {
         text: "lux",
         style: {
-          cssClass: "c-chart-labels",
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
         },
       },
     },

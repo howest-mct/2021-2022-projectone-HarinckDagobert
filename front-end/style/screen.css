@@ -655,11 +655,6 @@ button om scherm te bedienen
     padding-right: 4px;
 }
 @media (min-width: 835px) {
-    .c-dropdown-head {
-            display: flex;
-            justify-content: space-around;
-        }
-    
     .c-dropdown-titel {
         font-size: 32px;
         }
@@ -684,8 +679,8 @@ button om scherm te bedienen
 }
 /* chart
 */
-.c-chart-labels{
-    font-size: 14px
+.c-chart-labels {
+    font-size: 14px;
     line-height: 1.5;
     font-family: "proxima-nova", arial, sans-serif;
     color: #2D3033;

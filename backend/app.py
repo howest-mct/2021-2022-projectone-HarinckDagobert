@@ -255,8 +255,9 @@ def check_params():
             else:
                 schermStatus = False 
         else:
+            print("scherm moet dicht")
             schermOverride = False
-            time.sleep(120)
+            time.sleep(60)
         
         
 
@@ -273,11 +274,12 @@ def check_par_wind():
         parwind = int(par[0]["waarde"])
         sens = lees_sensors()
         senswind = sens[2]
-        if senswind < parwind:
-            schermOverride_Wind = False
-        else:
+        if senswind > parwind:
             schermOverride_Wind = True
             schermStatus = False
+        else:
+            schermOverride_Wind = False
+            
 
 def start_check_par_wind():
     thread = threading.Thread(target=check_par_wind, args=(), daemon=True)
@@ -288,9 +290,11 @@ def check_vorige_scherm():
     global vorigeStatus
     vorigestatus = DataRepository.read_last_scherm_state()['waarde']
     if vorigestatus == 1:
+        print("vorigestatus was open")
         vorigeStatus = True
         schermStatus = True
     elif vorigestatus == 0:
+        print("vorigestatus was dicht")
         vorigeStatus = False
         schermStatus = False
         
@@ -388,8 +392,8 @@ if __name__ == '__main__':
         check_vorige_scherm()
         start_check_status_scherm()
         start_check_par_wind()
-        start_realtime_sensoren()
         start_check_params()
+        start_realtime_sensoren()
         start_historiek_thread()
         start_lcd_display()
         print("**** Starting APP ****")

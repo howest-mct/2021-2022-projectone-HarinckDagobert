@@ -8,11 +8,11 @@
 
     <script src="https://cdn.socket.io/4.0.1/socket.io.min.js" integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous"></script>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
-    <link rel="manifest" href="site.webmanifest" />
-    <link rel="mask-icon" href="safari-pinned-tab.svg" color="#3385FF" />
+    <link rel="apple-touch-icon" sizes="180x180" href="img/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png" />
+    <link rel="manifest" href="img/site.webmanifest" />
+    <link rel="mask-icon" href="img/safari-pinned-tab.svg" color="#3385FF" />
 
     <script src="script/datahandler.js"></script>
     <script src="script/app.js"></script>
@@ -79,23 +79,23 @@
             </div>
           </div>
           <div class="o-section o-section--lg">
-            <div class="o-layout__item">
-              <div class="c-dropdown-head">
-                <div class="c-dropdown-left"></div>
-                <div class="c-dropdown-titel-wrapper">
-                  <h1 class="c-dropdown-titel js-dropdowntitel">Temperatuur van vandaag:</h1>
-                </div>
-                <select class="js-dropdown c-dropdown-menu" name="graphs" id="graphs">
-                  <option value="3">temperatuur</option>
-                  <option value="2">lichtsterkte</option>
-                  <option value="1">windsterkte</option>
-                </select>
+            <!-- <div class="o-layout__item"> -->
+            <div class="c-dropdown-head">
+              <div class="c-dropdown-left"></div>
+              <div class="c-dropdown-titel-wrapper">
+                <h1 class="c-dropdown-titel js-dropdowntitel">Temperatuur van vandaag:</h1>
               </div>
-              <div>
-                <div id="chart" class="js-chart c-dropdown-chart"></div>
-              </div>
+              <select class="js-dropdown c-dropdown-menu" name="graphs" id="graphs">
+                <option value="3">temperatuur</option>
+                <option value="2">lichtsterkte</option>
+                <option value="1">windsterkte</option>
+              </select>
+            </div>
+            <div>
+              <div id="chart" class="js-chart c-dropdown-chart"></div>
             </div>
           </div>
+          <!-- </div> -->
         </div>
       </div>
     </section>
