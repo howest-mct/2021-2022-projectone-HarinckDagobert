@@ -21,6 +21,7 @@ endpoint = '/api/v1'
 
 #hardware setup
 btnPin = Button(17)
+LCDscherm = 0
 schermStatus = False
 vorigeStatus = False
 schermOverride = False
@@ -302,22 +303,40 @@ def check_status_scherm():
     while True:
         global schermStatus
         global vorigeStatus
+        global LCDscherm
         if vorigeStatus != schermStatus:
             vorigeStatus = schermStatus
-            verander_scherm(schermStatus)
             if schermStatus == True:
+                LCDscherm = 1
                 actieid = 1
             elif schermStatus == False:
+                LCDscherm = 2
                 actieid = 2
+            verander_scherm(schermStatus)
             DataRepository.insert_into_historiek(schermStatus,None,4,actieid)
 
 def start_check_status_scherm():
     thread = threading.Thread(target=check_status_scherm, args=(), daemon=True)
     thread.start()
 
+def lcd_scherm_not(lcdscherm):
+    lcdobj.clear_LCD()
+    if lcdscherm == 1:
+        msg = "opent"
+    elif lcdscherm == 2:
+        msg = "sluit"
+    lcdobj.send_message(f"scherm {msg}")
+    time.sleep(5)
+    lcdobj.clear_LCD()
+    
+
 def lcd_display():
     while True:
         for i in range(10):
+            global LCDscherm
+            if LCDscherm != 0:
+                lcd_scherm_not(LCDscherm)
+                LCDscherm = 0
             lcdobj.LCD_move_cursor(0x00)
             lcdobj.send_message("ip-address:")
             lcdobj.LCD_move_cursor(0x40)
@@ -328,6 +347,9 @@ def lcd_display():
             lcdobj.clear_LCD()
         for i in range(10):
             global sens
+            if LCDscherm != 0:
+                lcd_scherm_not(LCDscherm)
+                LCDscherm = 0
             senswind = sens[2]
             senslicht = sens[1]
             senstemp = sens[0]
