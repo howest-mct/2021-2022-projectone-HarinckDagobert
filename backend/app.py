@@ -60,7 +60,7 @@ def omzetlux(value):
 
 def omzetwind(value):
     try:
-        w = ((value-124)/496) * 32.4
+        w = abs((((value-124)/496) * 32.4) -2)
         return w
     except:
         return 0
@@ -189,7 +189,7 @@ def receive_switch_scherm():
         schermOverride = True
         time.sleep(0.1)
         schermStatus = not schermStatus
-        print(schermStatus)
+        print("verandered door socket")
 
 
 
@@ -252,8 +252,10 @@ def check_params():
         global schermOverride_Wind
         if schermOverride == False and schermOverride_Wind == False:
             if av_licht > parlicht and av_temp > partemp and dag in pardagen:
+                print("scherm opened door sensors")
                 schermStatus = True
             else:
+                print("scherm sluit door sensors")
                 schermStatus = False 
         else:
             print("scherm moet dicht")
@@ -272,11 +274,14 @@ def check_par_wind():
         global schermOverride_Wind
         global par
         global sens
-        parwind = int(par[0]["waarde"])
+        parwind = float(par[0]["waarde"])
         sens = lees_sensors()
         senswind = sens[2]
+        print(f"{senswind} > {parwind}")
+        time.sleep(0.1)
         if senswind > parwind:
             schermOverride_Wind = True
+            print("scherm verandered door wind")
             schermStatus = False
         else:
             schermOverride_Wind = False
@@ -300,7 +305,10 @@ def check_vorige_scherm():
         schermStatus = False
         
 def check_status_scherm():
+    check_vorige_scherm()
     while True:
+        print("in check scherm")
+        time.sleep(0.1)
         global schermStatus
         global vorigeStatus
         global LCDscherm
@@ -411,13 +419,12 @@ if __name__ == '__main__':
         setup_gpio()
         new_par()
         start_chrome_thread()
-        check_vorige_scherm()
         start_check_status_scherm()
         start_check_par_wind()
         start_check_params()
+        start_lcd_display()
         start_realtime_sensoren()
         start_historiek_thread()
-        start_lcd_display()
         print("**** Starting APP ****")
         socketio.run(app, debug=False, host='0.0.0.0')
     except KeyboardInterrupt:
