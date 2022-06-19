@@ -60,7 +60,7 @@ def omzetlux(value):
 
 def omzetwind(value):
     try:
-        w = (((value-124)/496) * 32.4)
+        w = ((value-124)/496) * 32.4
         if w < 2.4:
             w = 0
         return w
@@ -75,7 +75,7 @@ def new_par():
 def lees_sensors():
     temp = round(omzettemp(spiClassObj.read_channel(1)),2)
     licht = round(omzetlux(spiClassObj.read_channel(2)))
-    wind = round(omzetwind(spiClassObj.read_channel(0)),2)
+    wind = round(omzetwind(spiClassObj.read_channel(7)),2)
     return [temp,licht,wind]
     
 def lees_knop(pin):
@@ -271,23 +271,41 @@ def start_check_params():
     thread.start()
 
 def check_par_wind():
+    check_vorige_scherm()
     while True:
         global schermStatus
+        global vorigeStatus
         global schermOverride_Wind
+        global LCDscherm
         global par
         global sens
         parwind = float(par[0]["waarde"])
         sens = lees_sensors()
         senswind = sens[2]
         if senswind > parwind:
+            print(f"{senswind} > {parwind}")
             schermOverride_Wind = True
             print("scherm verandered door wind")
             schermStatus = False
         else:
             schermOverride_Wind = False
+        if vorigeStatus != schermStatus:
+            print("scherm verandered")
+            print(f"{vorigeStatus}, {schermStatus}")
+            vorigeStatus = schermStatus
+            if schermStatus == True:
+                LCDscherm = 1
+                actieid = 1
+                print("scherm open")
+            elif schermStatus == False:
+                LCDscherm = 2
+                actieid = 2
+                print("scherm dicht")
+            verander_scherm(schermStatus)
+            DataRepository.insert_into_historiek(schermStatus,None,4,actieid)
             
 
-def start_check_par_wind():
+def start_check_par_wind_and_status_scherm():
     thread = threading.Thread(target=check_par_wind, args=(), daemon=True)
     thread.start()
 
@@ -304,27 +322,6 @@ def check_vorige_scherm():
         vorigeStatus = False
         schermStatus = False
         
-def check_status_scherm():
-    check_vorige_scherm()
-    while True:
-        global schermStatus
-        global vorigeStatus
-        global LCDscherm
-        if vorigeStatus != schermStatus:
-            vorigeStatus = schermStatus
-            if schermStatus == True:
-                LCDscherm = 1
-                actieid = 1
-            elif schermStatus == False:
-                LCDscherm = 2
-                actieid = 2
-            verander_scherm(schermStatus)
-            DataRepository.insert_into_historiek(schermStatus,None,4,actieid)
-
-def start_check_status_scherm():
-    thread = threading.Thread(target=check_status_scherm, args=(), daemon=True)
-    thread.start()
-
 def lcd_scherm_not(lcdscherm):
     lcdobj.clear_LCD()
     if lcdscherm == 1:
@@ -347,8 +344,8 @@ def lcd_display():
             lcdobj.send_message("ip-address:")
             lcdobj.LCD_move_cursor(0x40)
             msg = check_output(
-                ['hostname', '--all-ip-addresses']).decode('utf-8')[0:14]
-            lcdobj.send_message(msg)
+                ['hostname', '--all-ip-addresses']).decode('utf-8').split(' ')
+            lcdobj.send_message(msg[0])
             time.sleep(1)
             lcdobj.clear_LCD()
         for i in range(10):
@@ -414,11 +411,12 @@ def start_chrome_thread():
 
 if __name__ == '__main__':
     try:
+        global sens
         setup_gpio()
         new_par()
         start_chrome_thread()
-        start_check_status_scherm()
-        start_check_par_wind()
+        sens = lees_sensors()
+        start_check_par_wind_and_status_scherm()
         start_check_params()
         start_lcd_display()
         start_realtime_sensoren()
