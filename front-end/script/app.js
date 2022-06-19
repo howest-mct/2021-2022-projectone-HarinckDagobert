@@ -168,9 +168,9 @@ const UpdateChartLicht = function (labels, data) {
     ],
     labels: labels,
     yaxis: {
-      min: 500,
+      min: 0,
       max: 5000,
-      tickAmount: 9,
+      tickAmount: 5,
       labels: {
         style: {
           fontSize: "14px",
@@ -206,11 +206,9 @@ const UpdateChartScherm = function (labels, data) {
     ],
     labels: labels,
     yaxis: {
-      type: "category",
-      categories: ["dicht", "open"],
-      // min: 0,
-      // max: 1,
-      tickAmount: 2,
+      min: 0,
+      max: 1,
+      tickAmount: 1,
       labels: {
         style: {
           fontSize: "14px",
@@ -237,8 +235,6 @@ const UpdateChartScherm = function (labels, data) {
 //#region ***  Callback-Visualisation - show___         ***********
 
 const ShowTempChart = function (jsonObject) {
-  console.log(jsonObject);
-
   let converted_labels = [];
   let converted_data = [];
   for (const meting of jsonObject.historiek_device) {
@@ -248,22 +244,12 @@ const ShowTempChart = function (jsonObject) {
   DrawTempChartFirst(converted_labels, converted_data);
 };
 const ShowUpdatedChart = function (jsonObject) {
+  console.log(jsonObject);
   let converted_labels = [];
   let converted_data = [];
   for (const meting of jsonObject.historiek_device) {
     converted_labels.push(meting.datum);
-    if (gekozensensor == 4) {
-      //   switch (meting.waarde) {
-      //     case 0:
-      //       converted_data.push("sluit");
-      //       break;
-      //     case 1:
-      //       converted_data.push("open");
-      //       break;
-      //   }
-      // } else {
-      converted_data.push(meting.waarde);
-    }
+    converted_data.push(meting.waarde);
   }
   switch (gekozensensor) {
     case 1:
@@ -293,7 +279,7 @@ const showRealtime = function (jsonObject) {
     btn.checked = false;
   }
   document.querySelector(".js-sensor-wind").innerHTML = `${arrsensors.wind} m/s`;
-  document.querySelector(".js-sensor-licht").innerHTML = `${arrsensors.licht}`;
+  document.querySelector(".js-sensor-licht").innerHTML = `${arrsensors.licht} lux`;
   document.querySelector(".js-sensor-temp").innerHTML = `${arrsensors.temp} C°`;
   document.querySelector(".js-sensor-scherm").innerHTML = `${waardeScherm}`;
 };
@@ -373,7 +359,7 @@ const getHistoriekTemp = function () {
 
 const getHistoriekScherm = function () {
   gekozensensor = 4;
-  document.querySelector(".js-dropdowntitel").innerHTML = "Scherm statussen van vandaag:";
+  document.querySelector(".js-dropdowntitel").innerHTML = "Status scherm van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/4/`, ShowUpdatedChart);
 };
 
