@@ -28,7 +28,6 @@ class DataRepository:
 
     @staticmethod
     def read_historiek_today_by_device(deviceid):
-        #CAST(datum AS time)
         sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s and DATE(datum) = CURDATE()"
         params = [deviceid]
         return Database.get_rows(sql,params)

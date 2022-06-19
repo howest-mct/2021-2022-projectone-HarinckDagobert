@@ -11,7 +11,7 @@ const DrawTempChartFirst = function (labels, data) {
     chart: {
       id: "TempChart",
       type: "line",
-      width: "130%",
+      width: "100%",
     },
     stroke: {
       curve: "smooth",
@@ -82,6 +82,10 @@ const DrawTempChartFirst = function (labels, data) {
 };
 const UpdateChartWind = function (labels, data) {
   chart.updateOptions({
+    stroke: {
+      curve: "smooth",
+      width: 2.5,
+    },
     series: [
       {
         name: "m/s",
@@ -115,6 +119,10 @@ const UpdateChartWind = function (labels, data) {
 };
 const UpdateChartTemp = function (labels, data) {
   chart.updateOptions({
+    stroke: {
+      curve: "smooth",
+      width: 2.5,
+    },
     series: [
       {
         name: "celsius",
@@ -148,6 +156,10 @@ const UpdateChartTemp = function (labels, data) {
 };
 const UpdateChartLicht = function (labels, data) {
   chart.updateOptions({
+    stroke: {
+      curve: "smooth",
+      width: 2.5,
+    },
     series: [
       {
         name: "lux",
@@ -179,6 +191,47 @@ const UpdateChartLicht = function (labels, data) {
     },
   });
 };
+
+const UpdateChartScherm = function (labels, data) {
+  chart.updateOptions({
+    stroke: {
+      curve: "stepline",
+      width: 2.5,
+    },
+    series: [
+      {
+        name: "status",
+        data: data,
+      },
+    ],
+    labels: labels,
+    yaxis: {
+      type: "category",
+      categories: ["dicht", "open"],
+      // min: 0,
+      // max: 1,
+      tickAmount: 2,
+      labels: {
+        style: {
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
+        },
+      },
+      title: {
+        text: "status",
+        style: {
+          fontSize: "14px",
+          fontFamily: "proxima-nova",
+          colors: ["#2D3033"],
+          fontWeight: 300,
+        },
+      },
+    },
+  });
+};
+
 //#endregion
 
 //#region ***  Callback-Visualisation - show___         ***********
@@ -199,7 +252,18 @@ const ShowUpdatedChart = function (jsonObject) {
   let converted_data = [];
   for (const meting of jsonObject.historiek_device) {
     converted_labels.push(meting.datum);
-    converted_data.push(meting.waarde);
+    if (gekozensensor == 4) {
+      //   switch (meting.waarde) {
+      //     case 0:
+      //       converted_data.push("sluit");
+      //       break;
+      //     case 1:
+      //       converted_data.push("open");
+      //       break;
+      //   }
+      // } else {
+      converted_data.push(meting.waarde);
+    }
   }
   switch (gekozensensor) {
     case 1:
@@ -210,6 +274,9 @@ const ShowUpdatedChart = function (jsonObject) {
       break;
     case 3:
       UpdateChartTemp(converted_labels, converted_data);
+      break;
+    case 4:
+      UpdateChartScherm(converted_labels, converted_data);
       break;
   }
 };
@@ -303,6 +370,13 @@ const getHistoriekTemp = function () {
   document.querySelector(".js-dropdowntitel").innerHTML = "Temperatuur van vandaag:";
   handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowUpdatedChart);
 };
+
+const getHistoriekScherm = function () {
+  gekozensensor = 4;
+  document.querySelector(".js-dropdowntitel").innerHTML = "Scherm statussen van vandaag:";
+  handleData(`http://${lanIP}/api/v1/historiek/today/device/4/`, ShowUpdatedChart);
+};
+
 const getHistoriekTempFirst = function () {
   handleData(`http://${lanIP}/api/v1/historiek/today/device/3/`, ShowTempChart);
 };
@@ -310,6 +384,7 @@ const getHistoriekTempFirst = function () {
 const getParametersForm = function () {
   handleData(`http://${lanIP}/api/v1/device/`, showParametersForm);
 };
+
 //#endregion
 
 //#region ***  Event Listeners - listenTo___            ***********
@@ -333,6 +408,9 @@ const listenToSocketHistoriek = function () {
         break;
       case "3":
         getHistoriekTemp();
+        break;
+      case "4":
+        getHistoriekScherm();
         break;
     }
   });
@@ -371,6 +449,9 @@ const listenToUI = function () {
         break;
       case "3":
         getHistoriekTemp();
+        break;
+      case "4":
+        getHistoriekScherm();
         break;
     }
   });

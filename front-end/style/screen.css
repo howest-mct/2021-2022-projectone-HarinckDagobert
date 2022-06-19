@@ -453,6 +453,7 @@ a:focus {
 }
 
 .c-header__btn {
+    cursor: pointer;
     display:block;
     margin: 0 0 24px;
     color: #000
@@ -591,6 +592,7 @@ Component: button
 button om scherm te bedienen
 */  
 .c-form-button{
+    cursor: pointer;
     display: inline-block;
     text-decoration: none;
     padding: 4px;
@@ -635,6 +637,7 @@ button om scherm te bedienen
     visibility: hidden
 }
 .c-dropdown-menu{
+    cursor: pointer;
     font-size: 18px;
     line-height: 1.5;
     font-family: "proxima-nova", arial, sans-serif;
@@ -723,14 +726,16 @@ button om scherm te bedienen
 .c-dag__list{
     display: flex;
     Flex-wrap: wrap;
+    max-width: 250px;
     /* justify-content: space-between; */
 }
 
-.c-temp-FA2{
+/* .c-temp-FA2{
     margin-left: 43px;
-}
+} */
 
 .c-dag__item{
+    
     display: flex;
     align-items: center;
     justify-content: center;
@@ -739,12 +744,14 @@ button om scherm te bedienen
 }
 
 .c-form-dag {
+    
     position: absolute;
     visibility: hidden;
     opacity: 0;
 }
 
 input[type=checkbox]+label {
+    cursor: pointer;
     display: inline-block;
     text-decoration: none;
     font-size: 14px;
