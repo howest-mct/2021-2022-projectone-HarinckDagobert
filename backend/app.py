@@ -60,7 +60,9 @@ def omzetlux(value):
 
 def omzetwind(value):
     try:
-        w = abs((((value-124)/496) * 32.4) -2)
+        w = (((value-124)/496) * 32.4)
+        if w < 2.4:
+            w = 0
         return w
     except:
         return 0
@@ -277,8 +279,6 @@ def check_par_wind():
         parwind = float(par[0]["waarde"])
         sens = lees_sensors()
         senswind = sens[2]
-        print(f"{senswind} > {parwind}")
-        time.sleep(0.1)
         if senswind > parwind:
             schermOverride_Wind = True
             print("scherm verandered door wind")
@@ -307,8 +307,6 @@ def check_vorige_scherm():
 def check_status_scherm():
     check_vorige_scherm()
     while True:
-        print("in check scherm")
-        time.sleep(0.1)
         global schermStatus
         global vorigeStatus
         global LCDscherm
