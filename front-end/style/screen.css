@@ -13,10 +13,11 @@
 */
 
 html {
-    font-size: 16px;
+    font-size: 18px;
     line-height: 1.5;
-    font-family: "Helvetica Neue", Helvetica, arial, sans-serif;
-    color: #111;
+    font-family: "proxima-nova", arial, sans-serif;
+    color: #2D3033;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     box-sizing: border-box;
@@ -36,7 +37,7 @@ html {
  */
 
 ::selection {
-    background: #e85e00;
+    background: #0076D1;
     color: white;
     text-shadow: none;
 }
@@ -63,15 +64,17 @@ img {
 */
 
 h1 {
-    font-size: 36px;
+    font-size: 43px;
     line-height: 40px;
-    margin: 0 0 24px;
+    margin: 0 0 8px;
+    font-weight: 700;
 }
 
 h2 {
-    font-size: 23px;
-    line-height: 32px;
-    margin: 0 0 24px;
+    font-size: 21px;
+    line-height: 24px;
+    margin: 0 0 8px;
+    font-weight: 700;
 }
 
 h3 {
@@ -95,7 +98,7 @@ dl,
 table,
 address,
 figure {
-    margin: 0 0 24px;
+    margin: 0 0 4px;
 }
 
 ul,
@@ -136,18 +139,18 @@ hr {
 }
 
 a {
-    color: RoyalBlue;
+    color: #028DF9;
     transition: all .1s ease-in-out;
 }
 
 a:visited,
 a:active {
-    color: BlueViolet;
+    color: #028DF9;
 }
 
 a:hover,
 a:focus {
-    color: Crimson;
+    color: #004880;
 }
 
 /*------------------------------------*\
@@ -165,6 +168,27 @@ a:focus {
     display: flow-root;
 }
 
+.o-row-body {
+    padding-top: 48px;
+}
+
+/* @media (min-width: 768px) {
+    .o-row-body {
+            padding-left: 48px;
+            padding-right: 48px;
+        }
+} */
+/* color modifiers */
+
+.o-row--primary-x-dark {
+    color: #F2F5F7;
+    background-color: #005EA6;
+}
+
+.o-row--neutral-xx-dark {
+    color: #fff;
+    background: #20223A;
+}
 /* size modifiers */
 
 .o-row--lg {
@@ -256,6 +280,7 @@ a:focus {
     flex-wrap: wrap;
 }
 
+
 .o-layout__item {
     flex-basis: 100%;
 }
@@ -286,10 +311,22 @@ a:focus {
     padding: 0 24px;
 }
 
+/*horizontal row modifier */
+
+.o-layout--row {
+    flex-direction: row;
+}
+
 /* reverse horizontal row modifier */
 
 .o-layout--row-reverse {
     flex-direction: row-reverse;
+}
+
+/*vertical row modifier */
+
+.o-layout--column {
+    flex-direction: column;
 }
 
 /* Horizontal alignment modifiers*/
@@ -303,7 +340,7 @@ a:focus {
 }
 
 .o-layout--justify-center {
-    justify-content: center;
+    justify-items: center;
 }
 
 .o-layout--justify-space-around {
@@ -404,10 +441,474 @@ a:focus {
 \*------------------------------------*/
 
 /*
-    Component: Component name
+    Component: header
     ---
-    Component description
+    Main header of the website
 */
+
+.c-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.c-header__btn {
+    cursor: pointer;
+    display:block;
+    margin: 0 0 24px;
+    color: #000
+}
+
+
+
+.c-titel {
+    margin: 0 0 24px;
+}
+
+.c-header_rechts {
+    justify-content: flex-end;
+}
+.c-header_rechts {
+    justify-content: flex-start;
+}
+
+@media (min-width: 1200px) {
+    .c-titel {
+        font-size: 58px;
+    }
+
+    .c-button-rechts {
+        margin-right: 200px;
+    }
+    .c-button-links {
+        margin-left: 200px;
+    }
+}
+/*
+    Component: sensor-from
+    ---
+    form sensors
+*/
+    .c-sensor-form-titel{
+        display: inline-block;
+        /* margin: 0 0 8px; */
+        font-weight: 700;
+        /* width: 220px; */
+    }
+
+    .c-form-tekst{
+        display: inline-block;
+        font-size: 18px;
+        font-family: "proxima-nova", arial, sans-serif;
+        color: #2D3033;
+        font-weight: 400;
+    }
+
+    .c-sensor-item{
+        display: inline-block;
+        text-decoration: none;
+        padding: 16px;
+        border-radius: 4px;
+        background: #AED8F9;
+    }
+    .c-sensor-list{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 32px;
+    }
+
+
+    @media (min-width: 768px) {
+        .c-sensor-form-titel {
+            /* width: 335px; */
+        }
+
+        .c-sensor-list {
+            flex-direction: row;
+            gap:26px;
+            
+        }
+    }
+       
+    @media (min-width: 1200px) {
+        .c-sensor-form-titel {
+            /* width: 436px; */
+        }
+        .c-sensor-list {
+            gap: 82px;
+            
+        }
+    }
+
+    .c-scherm-items{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+ /*
+    slider
+*/
+
+.c-scherm-button{
+    padding-right: 8px;
+}
+.c-switch {
+    position: relative;
+    display: inline-block;
+    width: 54px;
+    height: 30px;
+
+}
+
+
+.c-switch-input {
+visibility: hidden;
+opacity: 0;
+}
+
+.c-slider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    cursor: pointer;
+    border-radius: 30px;
+    background-color: #A4ACB3;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+.c-slider:before {
+    border-radius: 50%;
+    position: absolute;
+    content: "";
+    height: 22px;
+    width: 22px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .3s;
+    transition: .3s;
+}
+
+input:checked+.c-slider {
+background-color: #004880
+}
+
+input:focus+.c-slider {
+box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked+.c-slider:before {
+    -webkit-transform: translateX(22px);
+    -ms-transform: translateX(22px);
+    transform: translateX(22px);
+}
+/*
+Component: hovertext
+---
+tooltip bij hoveren
+*/
+[data-tip] {
+	position:relative;
+
+}
+[data-tip]:before {
+	content:'';
+	/* hides the tooltip when not hovered */
+	display:none;
+	content:'';
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid #004880;	
+	position:absolute;
+	top:30px;
+	left:35px;
+	z-index:8;
+	font-size:0;
+	line-height:0;
+	width:0;
+	height:0;
+}
+[data-tip]:after {
+	display:none;
+
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: "proxima-nova", arial, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+	content:attr(data-tip);
+	position:absolute;
+	top:35px;
+	left:0px;
+	padding:5px 8px;
+	background:#004880;
+	color:#F2F5F7;
+	z-index:9;
+	border-radius: 3px;
+	white-space:nowrap;
+	word-wrap:normal;
+}
+[data-tip]:hover:before,
+[data-tip]:hover:after {
+	display:block;
+}
+/*
+Component: button
+---
+button om scherm te bedienen
+*/  
+.c-form-button{
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px #899299;
+    background: #FFFFFF;
+    color: #2D3033;
+}
+
+.c-button{
+    display:flex;
+    align-items: center;
+    flex-direction:column;
+}
+.c-button-tekst{
+    margin:0;
+}
+
+/*
+    Component: dropdown
+    ---
+    dropdown menu for multiple graphs
+*/
+
+
+.c-dropdown-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.c-dropdown-titel-wrapper{
+    display: flex;
+    width: none;
+    align-items: center;
+}
+.c-dropdown-titel {
+    font-size: 21px;
+    margin: auto;
+}
+
+.c-dropdown-left{
+    visibility: hidden
+}
+.c-dropdown-menu{
+    cursor: pointer;
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: "proxima-nova", arial, sans-serif;
+    color: #F2F5F7;
+    width: 130px;
+    height: 32px;
+    outline: none;
+    background-color: #004880;
+    font-weight: 400;
+    border-radius: 15px;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+.c-dropdown-chart{
+    display: inline-block;
+    /* justify-content: center; */
+    padding-left: 4px;
+    padding-right: 4px;
+}
+@media (min-width: 768px) {
+    .c-dropdown-titel {
+        font-size: 32px;
+        }
+    .c-dropdown-titel-wrapper {
+        display: flex;
+        width: 400px;
+    }
+    .c-dropdown-left {
+        display: inline-block;
+        width: 125px;
+        }
+    .c-dropdown-chart {
+        width: 720px;
+    }
+    .c-dag__list {
+        display: flex;
+        Flex-wrap: wrap;
+        max-width: 250px;
+        /* justify-content: space-between; */
+    }
+}
+
+@media (min-width: 1200px) {
+        .c-dropdown-titel-wrapper {
+            display: flex;
+            width: 510px;
+        }
+        .c-dropdown-titel {
+            font-size: 42px;
+        }
+        .c-dropdown-chart {
+        width: 1100px;
+        }
+}
+/* chart
+*/
+.c-chart-labels {
+    font-size: 14px;
+    line-height: 1.5;
+    font-family: "proxima-nova", arial, sans-serif;
+    color: #2D3033;
+    font-weight: 300;
+}
+.c-nav__link {
+    text-decoration: none;
+    font-weight: 600;
+    display: block;
+    padding: 8px 0;
+}
+
+.c-nav__link,
+.c-nav__link:visited,
+.c-nav__link:active {
+    color: #4B4E6B;
+}
+
+.c-nav__link:hover,
+.c-nav__link:focus {
+    color: #3385FF;
+}
+
+@media (min-width: 992px) {
+    .c-nav__list {
+        display: flex;
+    }
+
+    .c-nav__item--cta {
+        margin-left: 20px;
+    }
+
+    .c-nav__link {
+        padding: 8px 20px;
+    }
+}
+/*
+    Component: forms dagen
+*/
+.c-dag__list{
+    display: flex;
+    Flex-wrap: wrap;
+    max-width: 250px;
+    /* justify-content: space-between; */
+}
+@media (min-width: 768px) {
+    .c-dag__list {
+        max-width: 1000px;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* .c-dag__list {
+            
+        } */
+}
+
+.c-dag__item{
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    margin-bottom: 11px;
+}
+
+.c-form-dag {
+    
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+}
+
+input[type=checkbox]+label {
+    cursor: pointer;
+    display: inline-block;
+    text-decoration: none;
+    font-size: 14px;
+    line-height: 24px;
+    font-weight: 400;
+    width: 76px;
+    height: 32px;
+    padding: 4px;
+    border-radius: 4px;
+    box-shadow: inset 0 0 0 1px #899299;
+    background: #FFFFFF;
+    color: #2D3033;
+}
+
+input[type=checkbox]:checked+label {
+    box-shadow: inset 0 0 0 1px #004880;
+    background: #004880;
+    color: #F2F5F7;
+}
+/*
+    Component: Lead
+    ---
+    Lead type treatments to style everything that differs from standard typography elements
+*/
+
+.c-lead {
+    position: relative;
+}
+
+.c-lead--md {
+    font-size: 18px;
+    line-height: 32px;
+}
+
+.c-lead--lg {
+    font-size: 18px;
+    /* line-height: 32px; */
+}
+
+.c-lead--xl {
+    font-size: 21px;
+    line-height: 40px;
+}
+
+@media (min-width: 768px) {
+    .c-lead--lg {
+        font-size: 21px;
+        /* line-height: 32px; */
+        }
+    .c-lead--xl {
+        font-size: 32px;
+        line-height: 48px;
+    }
+}
+
+@media (min-width: 1200px) {
+    /* .c-lead--lg {
+        font-size: 26px;
+        /* line-height: 32px; 
+    } */
+    .c-lead--xl {
+        font-size: 42px;
+        line-height: 64px;
+    }
+}
 
 /*------------------------------------*\
   #UTILITIES

@@ -11,30 +11,25 @@ class DataRepository:
         return gegevens
 
     @staticmethod
+    def read_last_scherm_state():
+        sql = "SELECT volgnummer, waarde, actieid, deviceid from historiek WHERE volgnummer = (SELECT MAX(volgnummer) FROM historiek WHERE deviceid = 4)"
+        return Database.get_one_row(sql)
+    
+    @staticmethod
     def read_historiek():
-        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek"
-        return Database.get_rows(sql)
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek ORDER by datum DESC"
+        return Database.get_rows(sql)   
 
     @staticmethod
-    def read_historiek_by_date(date):
-        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE datum BETWEEN %s AND %s"
-        date1 = date + ' 00:00:00'
-        date2 = date + ' 23:59:59'
-        params = [date1,date2]
-        return Database.get_rows(sql,params)
-    
-    @staticmethod
     def read_historiek_by_device(deviceid):
-        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s"
+        sql = "SELECT volgnummer,CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s"
         params = [deviceid]
         return Database.get_rows(sql,params)
-    
+
     @staticmethod
-    def read_historiek_by_date_en_device(deviceid,date):
-        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s AND datum BETWEEN %s AND %s"
-        date1 = date + ' 00:00:00'
-        date2 = date + ' 23:59:59'
-        params = [deviceid, date1,date2]
+    def read_historiek_today_by_device(deviceid):
+        sql = "SELECT volgnummer, CAST(datum AS char) AS 'datum', waarde, commentaar, deviceid, actieid from historiek WHERE deviceid = %s and DATE(datum) = CURDATE()"
+        params = [deviceid]
         return Database.get_rows(sql,params)
 
     @staticmethod

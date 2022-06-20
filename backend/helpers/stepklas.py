@@ -30,12 +30,14 @@ class stepClass:
     
     def scherm_rechts(self):
         thestep = 0
-        for i in range(0,1024):
+        for i in range(0,12189):
             self.dostep(thestep)
             thestep += 1
             if thestep > 7:
                 thestep = 0
             time.sleep(0.0009)
+        for pin in self.pins:
+            GPIO.output(pin,GPIO.LOW)
 
 
     def links(self):
@@ -46,9 +48,11 @@ class stepClass:
 
     def scherm_links(self):
         thestep = 0
-        for i in range(0,1024):
+        for i in range(0,12189):
             self.dostep(thestep)
             thestep -= 1
             if thestep < 0:
                 thestep = 7
             time.sleep(0.0009)
+        for pin in self.pins:
+            GPIO.output(pin,GPIO.LOW)
