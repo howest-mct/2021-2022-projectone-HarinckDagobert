@@ -25,7 +25,7 @@
     <header class="o-row o-row--primary-x-dark">
       <div class="o-container">
         <div class="c-header">
-          <a href="main.html" class="c-header__btn c-header_links">
+          <a href="main.html" class="c-header__btn c-button-links">
             <svg id="Component_64_5" data-name="Component 64 – 5" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <rect id="rectangle" width="24" height="24" fill="none" />
               <path id="path" d="M19,6.4,17.6,5,12,10.6,6.4,5,5,6.4,10.6,12,5,17.6,6.4,19,12,13.4,17.6,19,19,17.6,13.4,12Z" fill="#f2f5f7" fill-rule="evenodd" />
@@ -34,7 +34,7 @@
           <div class="c-header__titel">
             <h1 class="c-titel">Bewerken</h1>
           </div>
-          <div class="js-form-button c-header__btn c-header_links">
+          <div class="js-form-button c-header__btn c-button-rechts">
             <svg id="Component_67_3" data-name="Component 67 – 3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
               <rect id="rectangle" width="24" height="24" fill="none" />
               <path id="path" d="M9,16.2,4.8,12,3.4,13.4,9,19,21,7,19.6,5.6Z" fill="#f2f5f7" fill-rule="evenodd" />
@@ -48,20 +48,22 @@
         <div class="o-container">
           <form>
             <div class="o-layout o-layout--column o-layout--align-center">
-              <div class="o-section">
-                <label class="c-sensor-form-titel" for="waardewind">Maximum windsterkte:</label><br />
-                <input class="js-form-wind" type="number" id="waardewind" name="waardewind" value="" required /><br />
+              <div class="o-section o-layout o-layout--column o-layout--align-center">
+                <label class="c-sensor-form-titel c-lead--xl" for="waardewind">Maximum windsterkte:</label>
+                <div data-tip="Het is aangeraden om zonnescherm nooit boven 11m/s te openen">
+                  <input class="js-form-wind c-form-tekst c-lead--lg" min="0" type="number" id="waardewind" name="waardewind" value="" /><br />
+                </div>
               </div>
-              <div class="o-section">
-                <label class="c-sensor-form-titel" for="waardelicht">Minimum lichtsterkte:</label><br />
-                <input class="js-form-licht" type="number" id="waardelicht" name="waardelicht" value="" required /><br />
+              <div class="o-section o-layout o-layout--column o-layout--align-center">
+                <label class="c-sensor-form-titel c-lead--xl" for="waardelicht">Minimum lichtsterkte:</label>
+                <div data-tip="Op een zonnige dag heb je ~4000 lux"><input class="js-form-licht c-form-tekst c-lead--lg" min="0" type="number" id="waardelicht" name="waardelicht" value="" /><br /></div>
               </div>
-              <div class="o-section">
-                <label class="c-sensor-form-titel" for="waardetemp">Minimum temperatuur:</label><br />
-                <input class="js-form-temp" type="number" id="waardetemp" name="waardetemp" value="" required /><br />
+              <div class="o-section o-layout o-layout--column o-layout--align-center">
+                <label class="c-sensor-form-titel c-lead--xl" for="waardetemp">Minimum temperatuur:</label>
+                <div data-tip="Op een zonnige dag heb je ~30 Celsius"><input class="js-form-temp c-form-tekst c-lead--lg" min="-273" type="number" id="waardetemp" name="waardetemp" value="" /><br /></div>
               </div>
               <div class="o-section c-temp-FA2 o-layout o-layout--column o-layout--align-center">
-                <h2>Weekdagen:</h2>
+                <h2 class="c-lead--xl">Weekdagen:</h2>
                 <ul class="o-list c-dag__list">
                   <li class="c-dag__item">
                     <input class="js-form-maandag js-form-dag c-form-dag" type="checkbox" id="maandag" name="weekdagen" value="1" />
@@ -96,7 +98,7 @@
               <div class="o-section">
                 <div class="c-form-button js-default-button">
                   <div class="c-button">
-                    <p class="c-button-tekst">default waarden</p>
+                    <p class="c-button-tekst c-lead--lg">default waarden</p>
                   </div>
                 </div>
               </div>

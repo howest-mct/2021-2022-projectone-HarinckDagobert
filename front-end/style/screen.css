@@ -340,7 +340,7 @@ a:focus {
 }
 
 .o-layout--justify-center {
-    justify-content: center;
+    justify-items: center;
 }
 
 .o-layout--justify-space-around {
@@ -471,21 +471,42 @@ a:focus {
 .c-header_rechts {
     justify-content: flex-start;
 }
+
+@media (min-width: 1200px) {
+    .c-titel {
+        font-size: 58px;
+    }
+
+    .c-button-rechts {
+        margin-right: 200px;
+    }
+    .c-button-links {
+        margin-left: 200px;
+    }
+}
 /*
     Component: sensor-from
     ---
     form sensors
 */
     .c-sensor-form-titel{
-        font-size: 18px;
-        line-height: 24px;
-        margin: 0 0 8px;
+        display: inline-block;
+        /* margin: 0 0 8px; */
         font-weight: 700;
+        /* width: 220px; */
     }
+
+    .c-form-tekst{
+        display: inline-block;
+        font-size: 18px;
+        font-family: "proxima-nova", arial, sans-serif;
+        color: #2D3033;
+        font-weight: 400;
+    }
+
     .c-sensor-item{
         display: inline-block;
         text-decoration: none;
-        width:220px;
         padding: 16px;
         border-radius: 4px;
         background: #AED8F9;
@@ -499,24 +520,25 @@ a:focus {
     }
 
 
-    @media (min-width: 835px) {
+    @media (min-width: 768px) {
+        .c-sensor-form-titel {
+            /* width: 335px; */
+        }
+
         .c-sensor-list {
             flex-direction: row;
             gap:26px;
             
         }
-        .c-sensor-item {
-            width: 180px;
-        }
     }
        
     @media (min-width: 1200px) {
+        .c-sensor-form-titel {
+            /* width: 436px; */
+        }
         .c-sensor-list {
             gap: 82px;
             
-        }
-        .c-sensor-item {
-            width: 220px;
         }
     }
 
@@ -585,7 +607,58 @@ input:checked+.c-slider:before {
     -ms-transform: translateX(22px);
     transform: translateX(22px);
 }
+/*
+Component: hovertext
+---
+tooltip bij hoveren
+*/
+[data-tip] {
+	position:relative;
 
+}
+[data-tip]:before {
+	content:'';
+	/* hides the tooltip when not hovered */
+	display:none;
+	content:'';
+	border-left: 5px solid transparent;
+	border-right: 5px solid transparent;
+	border-bottom: 5px solid #004880;	
+	position:absolute;
+	top:30px;
+	left:35px;
+	z-index:8;
+	font-size:0;
+	line-height:0;
+	width:0;
+	height:0;
+}
+[data-tip]:after {
+	display:none;
+
+    font-size: 18px;
+    line-height: 1.5;
+    font-family: "proxima-nova", arial, sans-serif;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+	content:attr(data-tip);
+	position:absolute;
+	top:35px;
+	left:0px;
+	padding:5px 8px;
+	background:#004880;
+	color:#F2F5F7;
+	z-index:9;
+	border-radius: 3px;
+	white-space:nowrap;
+	word-wrap:normal;
+}
+[data-tip]:hover:before,
+[data-tip]:hover:after {
+	display:block;
+}
 /*
 Component: button
 ---
@@ -657,7 +730,7 @@ button om scherm te bedienen
     padding-left: 4px;
     padding-right: 4px;
 }
-@media (min-width: 835px) {
+@media (min-width: 768px) {
     .c-dropdown-titel {
         font-size: 32px;
         }
@@ -670,7 +743,13 @@ button om scherm te bedienen
         width: 125px;
         }
     .c-dropdown-chart {
-        width: 800px;
+        width: 720px;
+    }
+    .c-dag__list {
+        display: flex;
+        Flex-wrap: wrap;
+        max-width: 250px;
+        /* justify-content: space-between; */
     }
 }
 
@@ -735,10 +814,17 @@ button om scherm te bedienen
     max-width: 250px;
     /* justify-content: space-between; */
 }
+@media (min-width: 768px) {
+    .c-dag__list {
+        max-width: 1000px;
+    }
+}
 
-/* .c-temp-FA2{
-    margin-left: 43px;
-} */
+@media (min-width: 1200px) {
+    /* .c-dag__list {
+            
+        } */
+}
 
 .c-dag__item{
     
@@ -793,25 +879,33 @@ input[type=checkbox]:checked+label {
 }
 
 .c-lead--lg {
-    font-size: 20px;
-    line-height: 32px;
+    font-size: 18px;
+    /* line-height: 32px; */
 }
 
 .c-lead--xl {
-    font-size: 32px;
+    font-size: 21px;
     line-height: 40px;
 }
 
 @media (min-width: 768px) {
+    .c-lead--lg {
+        font-size: 21px;
+        /* line-height: 32px; */
+        }
     .c-lead--xl {
-        font-size: 41px;
+        font-size: 32px;
         line-height: 48px;
     }
 }
 
 @media (min-width: 1200px) {
+    /* .c-lead--lg {
+        font-size: 26px;
+        /* line-height: 32px; 
+    } */
     .c-lead--xl {
-        font-size: 52px;
+        font-size: 42px;
         line-height: 64px;
     }
 }

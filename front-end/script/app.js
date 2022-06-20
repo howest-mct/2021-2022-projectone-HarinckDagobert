@@ -319,9 +319,9 @@ const showParametersForm = function (jsonObject) {
 };
 
 const showDefaultValues = function () {
-  document.querySelector(".js-form-wind").value = 6;
-  document.querySelector(".js-form-licht").value = 2000;
-  document.querySelector(".js-form-temp").value = 20;
+  document.querySelector(".js-form-wind").value = 10;
+  document.querySelector(".js-form-licht").value = 2500;
+  document.querySelector(".js-form-temp").value = 24;
   document.querySelector(".js-form-maandag").checked = false;
   document.querySelector(".js-form-dinsdag").checked = false;
   document.querySelector(".js-form-woensdag").checked = false;
